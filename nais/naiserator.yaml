@@ -47,6 +47,10 @@ spec:
       {{/each}}
   kafka:
     pool: {{kafkaPool}}
+  azure:
+    application:
+      enabled: true
+      tenant: {{azureTenant}}
   leaderElection: true
   env:
   {{#each env}}
