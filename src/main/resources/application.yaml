@@ -1,0 +1,52 @@
+server:
+  port: 8080
+
+spring:
+  main.banner-mode: 'off'
+  profiles:
+    active: default
+  flyway:
+    enabled: true
+  datasource:
+    url: "jdbc:postgresql://${NAIS_DATABASE_SYKEPENGESOKNAD_IKKE_SENDT_ALTINNVARSEL_SYKEPENGESOKNAD_IKKE_SENDT_ALTINNVARSEL_DB_HOST}:${NAIS_DATABASE_SYKEPENGESOKNAD_IKKE_SENDT_ALTINNVARSEL_SYKEPENGESOKNAD_IKKE_SENDT_ALTINNVARSEL_DB_PORT}/${NAIS_DATABASE_SYKEPENGESOKNAD_IKKE_SENDT_ALTINNVARSEL_SYKEPENGESOKNAD_IKKE_SENDT_ALTINNVARSEL_DB_DATABASE}"
+    username: ${NAIS_DATABASE_SYKEPENGESOKNAD_IKKE_SENDT_ALTINNVARSEL_SYKEPENGESOKNAD_IKKE_SENDT_ALTINNVARSEL_DB_USERNAME}
+    password: ${NAIS_DATABASE_SYKEPENGESOKNAD_IKKE_SENDT_ALTINNVARSEL_SYKEPENGESOKNAD_IKKE_SENDT_ALTINNVARSEL_DB_PASSWORD}
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 3
+
+aiven-kafka:
+  auto-offset-reset: none
+  security-protocol: SSL
+
+management:
+  endpoint.prometheus.enabled: true
+  endpoints.web:
+    base-path: /internal
+    exposure.include: health,prometheus
+    path-mapping.prometheus: /prometheus
+
+logging.config: "classpath:logback.xml"
+
+no.nav.security.jwt:
+  client:
+    registration:
+      flex-fss-proxy-client-credentials:
+        token-endpoint-url: https://login.microsoftonline.com/${AZURE_APP_TENANT_ID}/oauth2/v2.0/token
+        grant-type: client_credentials
+        scope: api://${FLEX_FSS_PROXY_AAD_CLIENT_ID}/.default
+        authentication:
+          client-id: ${AZURE_APP_CLIENT_ID}
+          client-secret: ${AZURE_APP_CLIENT_SECRET}
+          client-auth-method: client_secret_basic
+
+      pdl-api-client-credentials:
+        token-endpoint-url: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
+        grant-type: client_credentials
+        scope: api://${PDL_API_AAD_CLIENT_ID}/.default
+        authentication:
+          client-id: ${AZURE_APP_CLIENT_ID}
+          client-secret: ${AZURE_APP_CLIENT_SECRET}
+          client-auth-method: client_secret_basic
+
+
