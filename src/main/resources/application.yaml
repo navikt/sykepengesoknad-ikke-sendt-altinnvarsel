@@ -16,7 +16,7 @@ spring:
       maximum-pool-size: 3
 
 aiven-kafka:
-  auto-offset-reset: latest
+  auto-offset-reset: none
   security-protocol: SSL
 
 management:
