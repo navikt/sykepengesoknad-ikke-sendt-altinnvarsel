@@ -25,6 +25,7 @@ class SykepengesoknadListener(
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         try {
             val soknad = cr.value().tilSykepengesoknadDTO()
+            
             varselPlanlegger.planleggVarsler(soknad, Instant.ofEpochMilli(cr.timestamp()))
             acknowledgment.acknowledge()
         } catch (e: Exception) {
