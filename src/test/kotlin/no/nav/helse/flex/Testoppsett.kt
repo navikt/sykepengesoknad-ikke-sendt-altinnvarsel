@@ -4,6 +4,7 @@ import no.nav.helse.flex.kafka.FLEX_SYKEPENGESOKNAD_TOPIC
 import no.nav.helse.flex.kafka.NARMESTELEDER_LEESAH_TOPIC
 import no.nav.helse.flex.narmesteleder.NarmesteLederRepository
 import no.nav.helse.flex.narmesteleder.domain.NarmesteLederLeesah
+import no.nav.helse.flex.varsler.PlanlagtVarselRepository
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.syfo.kafka.felles.SykepengesoknadDTO
 import org.apache.kafka.clients.producer.Producer
@@ -37,6 +38,9 @@ abstract class Testoppsett {
 
     @Autowired
     lateinit var narmesteLederRepository: NarmesteLederRepository
+
+    @Autowired
+    lateinit var planlagtVarselRepository: PlanlagtVarselRepository
 
     final val fnr = "12345678901"
     final val aktorId = "aktorid123"
