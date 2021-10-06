@@ -71,7 +71,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
 
-    implementation("com.sun.activation:jakarta.activation:1.2.1")
+    implementation("com.sun.activation:jakarta.activation:2.0.1")
     implementation("com.sun.xml.bind:jaxb-impl:2.3.1")
     implementation("com.sun.xml.bind:jaxb-core:2.3.0.1")
     implementation("com.sun.xml.messaging.saaj:saaj-impl:1.5.1")
