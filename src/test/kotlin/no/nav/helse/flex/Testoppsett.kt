@@ -7,6 +7,7 @@ import no.nav.helse.flex.narmesteleder.domain.NarmesteLederLeesah
 import no.nav.helse.flex.varsler.PlanlagtVarselRepository
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.syfo.kafka.felles.SykepengesoknadDTO
+import okhttp3.mockwebserver.MockWebServer
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.junit.jupiter.api.AfterAll
@@ -46,6 +47,7 @@ abstract class Testoppsett {
     final val aktorId = "aktorid123"
 
     companion object {
+        var mockAltinn: MockWebServer
         init {
             PostgreSQLContainer12().also {
                 it.start()
@@ -58,6 +60,10 @@ abstract class Testoppsett {
                 it.start()
                 System.setProperty("KAFKA_BROKERS", it.bootstrapServers)
             }
+            mockAltinn = MockWebServer()
+            mockAltinn.start()
+            System.setProperty("altinn.url", "http://localhost:${mockAltinn.port}")
+            mockAltinn.toString()
         }
     }
 
