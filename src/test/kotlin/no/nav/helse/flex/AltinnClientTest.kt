@@ -1,0 +1,78 @@
+package no.nav.helse.flex
+
+import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2
+import no.nav.helse.flex.client.altinn.AltinnVarsel
+import no.nav.helse.flex.client.altinn.AltinnVarselClient
+import no.nav.helse.flex.varsler.domain.PlanlagtVarselType
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.RecordedRequest
+import org.amshove.kluent.`should be equal to`
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import java.io.StringReader
+import java.time.LocalDate
+import java.util.*
+import javax.xml.bind.JAXBContext
+import javax.xml.bind.JAXBElement
+import javax.xml.stream.XMLInputFactory
+import javax.xml.stream.XMLStreamReader
+
+class AltinnClientTest : Testoppsett() {
+
+    @Autowired
+    lateinit var altinnVarselClient: AltinnVarselClient
+
+    @Test
+    fun `test webservice kall til altinn`() {
+        val response = """
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+        <soap:Body>
+            <InsertCorrespondenceBasicV2Response xmlns="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10" xmlns:res="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10">
+                <InsertCorrespondenceBasicV2Result>
+                    <res:ReceiptStatusCode>OK</res:ReceiptStatusCode>
+                </InsertCorrespondenceBasicV2Result>
+            </InsertCorrespondenceBasicV2Response>
+        </soap:Body>
+    </soap:Envelope>"""
+
+        mockAltinn.enqueue(MockResponse().setBody(response))
+
+        val altinnVarsel = AltinnVarsel(
+            id = 1,
+            aktorId = "32434",
+            fnrSykmeldt = "123123",
+            navnSykmeldt = "Max Mekker",
+            orgnummer = "234234",
+            ressursId = UUID.randomUUID().toString(),
+            soknadFom = LocalDate.now(),
+            soknadTom = LocalDate.now(),
+            type = PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD
+        )
+
+        altinnVarselClient.sendManglendeInnsendingAvSoknadMeldingTilArbeidsgiver(altinnVarsel)
+
+        val soapRequest = mockAltinn.takeRequest()
+
+        val insertCorrespondenceBasicV2 = soapRequest.parseCorrespondence()
+        insertCorrespondenceBasicV2.systemUserCode `should be equal to` "NAV_DIGISYFO"
+        insertCorrespondenceBasicV2.correspondence.content.value.messageTitle.value `should be equal to` "Manglende søknad om sykepenger - Max Mekker (123123)"
+        soapRequest.path `should be equal to` "/ServiceEngineExternal/CorrespondenceAgencyExternalBasic.svc"
+        soapRequest.method `should be equal to` "POST"
+    }
+
+    fun RecordedRequest.parseCorrespondence(): InsertCorrespondenceBasicV2 {
+        val requestBody = this.body.readUtf8()
+        val sr = XMLInputFactory.newFactory().createXMLStreamReader(StringReader(requestBody))
+        while (sr.hasNext()) {
+            val type = sr.next()
+            if (type == XMLStreamReader.START_ELEMENT && "InsertCorrespondenceBasicV2" == sr.localName) {
+
+                val jc: JAXBContext = JAXBContext.newInstance(InsertCorrespondenceBasicV2::class.java)
+                val unmarshaller = jc.createUnmarshaller()
+                val je: JAXBElement<InsertCorrespondenceBasicV2> = unmarshaller.unmarshal(sr, InsertCorrespondenceBasicV2::class.java)
+                return je.value
+            }
+        }
+        throw RuntimeException("Fant ikke forventa element")
+    }
+}
