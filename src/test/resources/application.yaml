@@ -39,3 +39,5 @@ no.nav.security.jwt:
 
 PDL_BASE_URL: "https://pdl-api.dev-fss-pub.nais.io"
 elector.path: dont_look_for_leader
+
+varsel-kafka-timestamp-start: 2021-09-06T12:00:00.000000+02:00
