@@ -47,7 +47,7 @@ val logstashLogbackEncoderVersion = "6.6"
 val kluentVersion = "1.68"
 val syfoKafkaVersion = "2021.07.20-09.39-6be2c52c"
 val tjenestespesifikasjonerVersion = "1.2020.01.20-15.44-063ae9f84815"
-val cxfVersion = "3.2.10"
+val cxfVersion = "3.4.5"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
@@ -71,9 +71,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
 
-    implementation("com.sun.activation:jakarta.activation:1.2.1")
-    implementation("com.sun.xml.bind:jaxb-impl:2.3.1")
-    implementation("com.sun.xml.bind:jaxb-core:2.3.0.1")
+    implementation("com.sun.activation:jakarta.activation:2.0.1")
+    implementation("com.sun.xml.bind:jaxb-impl:3.0.2")
+    implementation("com.sun.xml.bind:jaxb-core:3.0.2")
     implementation("com.sun.xml.messaging.saaj:saaj-impl:1.5.1")
     implementation("javax.xml.ws:jaxws-api:2.3.1")
     implementation("javax.jws:javax.jws-api:1.1")
