@@ -70,6 +70,7 @@ dependencies {
     implementation("org.hibernate.validator:hibernate-validator")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("org.apache.commons:commons-text:1.9")
 
     implementation("com.sun.activation:jakarta.activation:2.0.1")
     implementation("com.sun.xml.bind:jaxb-impl:3.0.2")

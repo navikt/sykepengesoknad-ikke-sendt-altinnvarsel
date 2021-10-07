@@ -1,50 +1,32 @@
 package no.nav.helse.flex
 
-import no.nav.helse.flex.client.pdl.*
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.HttpStatus
+import no.nav.helse.flex.Testoppsett.Companion.pdlMockWebserver
+
+import no.nav.helse.flex.client.pdl.HentNavn
+import no.nav.helse.flex.client.pdl.HentNavnResponse
+import no.nav.helse.flex.client.pdl.HentNavnResponseData
+import no.nav.helse.flex.client.pdl.Navn
+import okhttp3.mockwebserver.MockResponse
+import org.springframework.http.HttpHeaders.CONTENT_TYPE
 import org.springframework.http.MediaType
-import org.springframework.http.client.ClientHttpRequest
-import org.springframework.test.web.client.ExpectedCount
-import org.springframework.test.web.client.RequestMatcher
-import org.springframework.test.web.client.match.MockRestRequestMatchers.*
-import org.springframework.test.web.client.response.MockRestResponseCreators
-import java.net.URI
 
-fun Testoppsett.mockPdlResponse(
-    identResponse: HentIdenterResponse = getIdentResponse(
-        listOf(
-            PdlIdent(gruppe = AKTORID, ident = aktorId),
-            PdlIdent(gruppe = FOLKEREGISTERIDENT, ident = fnr),
-        )
-    ),
-    expectedCount: ExpectedCount = ExpectedCount.once()
-) {
-    pdlMockServer!!.expect(
-        expectedCount,
-        requestTo(URI("https://pdl-api.dev-fss-pub.nais.io/graphql"))
-    )
-        .andExpect(method(HttpMethod.POST))
-        .andExpect(header("TEMA", "SYK"))
-        .andExpect(harBearerToken())
-        .andRespond(
-            MockRestResponseCreators.withStatus(HttpStatus.OK)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(
-                    identResponse.serialisertTilString()
+fun mockPdlResponse(
+    hentNavnResponse: HentNavnResponse = HentNavnResponse(
+        errors = emptyList(),
+        data = HentNavnResponseData(
+            hentPerson = HentNavn(
+                navn = listOf(
+                    Navn(fornavn = "OLE", mellomnavn = null, etternavn = "GUNNAR")
                 )
+            )
         )
+    )
+) {
+    val response = MockResponse()
+        .setBody(hentNavnResponse.serialisertTilString())
+        .setHeader(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+
+    pdlMockWebserver.enqueue(response)
+
 }
 
-fun harBearerToken(): RequestMatcher {
-    return RequestMatcher { request: ClientHttpRequest ->
-
-        val authHeader = request.headers.getFirst(HttpHeaders.AUTHORIZATION)
-            ?: throw AssertionError("Mangler ${HttpHeaders.AUTHORIZATION} header")
-
-        if (!authHeader.startsWith("Bearer ey")) {
-            throw AssertionError("${HttpHeaders.AUTHORIZATION} ser ikke ut til å være bearertoken")
-        }
-    }
-}

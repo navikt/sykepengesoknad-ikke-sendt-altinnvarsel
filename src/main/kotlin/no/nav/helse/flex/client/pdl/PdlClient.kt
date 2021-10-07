@@ -26,24 +26,27 @@ class PdlClient(
     private val TEMA_SYK = "SYK"
     private val IDENT = "ident"
 
-    private val HENT_IDENTER_QUERY =
+
+    private val HENT_NAVN_QUERY =
         """
 query(${"$"}ident: ID!){
-  hentIdenter(ident: ${"$"}ident, historikk: false) {
-    identer {
-      ident,
-      gruppe
+  hentPerson(ident: ${"$"}ident) {
+  	navn(historikk: false) {
+  	  fornavn
+  	  mellomnavn
+  	  etternavn
     }
   }
 }
 """
 
+
     @Retryable(exclude = [FunctionalPdlError::class])
-    fun hentIdenter(norskIdentitetsnummer: String): HentIdenterResponseData {
+    fun hentFormattertNavn(fnr: String): String {
 
         val graphQLRequest = GraphQLRequest(
-            query = HENT_IDENTER_QUERY,
-            variables = Collections.singletonMap(IDENT, norskIdentitetsnummer)
+            query = HENT_NAVN_QUERY,
+            variables = Collections.singletonMap(IDENT, fnr)
         )
 
         val responseEntity = pdlRestTemplate.exchange(
@@ -57,10 +60,11 @@ query(${"$"}ident: ID!){
             throw RuntimeException("PDL svarer med status ${responseEntity.statusCode} - ${responseEntity.body}")
         }
 
-        val parsedResponse: HentIdenterResponse? = responseEntity.body?.let { objectMapper.readValue(it) }
+        val parsedResponse: HentNavnResponse? = responseEntity.body?.let { objectMapper.readValue(it) }
 
         parsedResponse?.data?.let {
-            return it
+            return it.hentPerson?.navn?.firstOrNull()?.format()
+                ?: throw FunctionalPdlError("Fant navn i pdl response. ${parsedResponse.hentErrors()}")
         }
         throw FunctionalPdlError("Fant ikke person, ingen body eller data. ${parsedResponse.hentErrors()}")
     }
@@ -85,9 +89,11 @@ query(${"$"}ident: ID!){
         }
     }
 
-    private fun HentIdenterResponse?.hentErrors(): String? {
+
+    private fun HentNavnResponse?.hentErrors(): String? {
         return this?.errors?.map { it.message }?.joinToString(" - ")
     }
+
 
     data class GraphQLRequest(val query: String, val variables: Map<String, String>)
 

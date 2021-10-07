@@ -35,7 +35,7 @@ class AltinnClientTest : Testoppsett() {
         </soap:Body>
     </soap:Envelope>"""
 
-        mockAltinn.enqueue(MockResponse().setBody(response))
+        altinnMockWebserver.enqueue(MockResponse().setBody(response))
 
         val altinnVarsel = AltinnVarsel(
             fnrSykmeldt = "123123",
@@ -49,7 +49,7 @@ class AltinnClientTest : Testoppsett() {
 
         altinnVarselClient.sendManglendeInnsendingAvSoknadMeldingTilArbeidsgiver(altinnVarsel)
 
-        val soapRequest = mockAltinn.takeRequest()
+        val soapRequest = altinnMockWebserver.takeRequest()
 
         val insertCorrespondenceBasicV2 = soapRequest.parseCorrespondence()
         insertCorrespondenceBasicV2.systemUserCode `should be equal to` "NAV_DIGISYFO"

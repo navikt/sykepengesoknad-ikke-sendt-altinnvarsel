@@ -14,12 +14,9 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.web.client.MockRestServiceServer
-import org.springframework.web.client.RestTemplate
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
-import javax.annotation.PostConstruct
 
 private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>("postgres:12-alpine")
 
@@ -31,12 +28,6 @@ abstract class Testoppsett {
     @Autowired
     lateinit var kafkaProducer: Producer<String, String>
 
-    var pdlMockServer: MockRestServiceServer? = null
-    var syfoServiceStanglerMockServer: MockRestServiceServer? = null
-
-    @Autowired
-    lateinit var pdlRestTemplate: RestTemplate
-
     @Autowired
     lateinit var narmesteLederRepository: NarmesteLederRepository
 
@@ -47,7 +38,9 @@ abstract class Testoppsett {
     final val aktorId = "aktorid123"
 
     companion object {
-        var mockAltinn: MockWebServer
+        var altinnMockWebserver: MockWebServer
+        var pdlMockWebserver: MockWebServer
+
         init {
             PostgreSQLContainer12().also {
                 it.start()
@@ -60,19 +53,19 @@ abstract class Testoppsett {
                 it.start()
                 System.setProperty("KAFKA_BROKERS", it.bootstrapServers)
             }
-            mockAltinn = MockWebServer()
-            mockAltinn.start()
-            System.setProperty("altinn.url", "http://localhost:${mockAltinn.port}")
-            mockAltinn.toString()
+            altinnMockWebserver = MockWebServer()
+                .also { it.start() }
+                .also {
+                    System.setProperty("altinn.url", "http://localhost:${it.port}")
+                }
+
+            pdlMockWebserver = MockWebServer()
+                .also {
+                    System.setProperty("PDL_BASE_URL", "http://localhost:${it.port}")
+                }
         }
     }
 
-    @PostConstruct
-    fun setupRestServiceServers() {
-        if (pdlMockServer == null) {
-            pdlMockServer = MockRestServiceServer.createServer(pdlRestTemplate)
-        }
-    }
 
     @AfterAll
     fun `Vi tømmer databasen`() {
