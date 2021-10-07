@@ -2,14 +2,12 @@ package no.nav.helse.flex.client.pdl
 
 import org.apache.commons.text.WordUtils
 
-
 data class ResponseError(
     val message: String?,
     val locations: List<ErrorLocation>?,
     val path: List<String>?,
     val extensions: ErrorExtension?
 )
-
 
 data class HentNavnResponse(
     val data: HentNavnResponseData,
@@ -39,8 +37,6 @@ fun Navn.format(): String {
 
     return WordUtils.capitalizeFully(navn, ' ', '-')
 }
-
-
 
 data class ErrorLocation(
     val line: String?,

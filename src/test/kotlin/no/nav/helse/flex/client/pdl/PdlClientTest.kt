@@ -24,4 +24,3 @@ class PdlClientTest : Testoppsett() {
         request.headers["Authorization"]!!.shouldStartWith("Bearer ey")
     }
 }
-

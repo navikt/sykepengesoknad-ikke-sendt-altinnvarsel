@@ -26,7 +26,6 @@ class PdlClient(
     private val TEMA_SYK = "SYK"
     private val IDENT = "ident"
 
-
     private val HENT_NAVN_QUERY =
         """
 query(${"$"}ident: ID!){
@@ -39,7 +38,6 @@ query(${"$"}ident: ID!){
   }
 }
 """
-
 
     @Retryable(exclude = [FunctionalPdlError::class])
     fun hentFormattertNavn(fnr: String): String {
@@ -89,11 +87,9 @@ query(${"$"}ident: ID!){
         }
     }
 
-
     private fun HentNavnResponse?.hentErrors(): String? {
         return this?.errors?.map { it.message }?.joinToString(" - ")
     }
-
 
     data class GraphQLRequest(val query: String, val variables: Map<String, String>)
 

@@ -1,7 +1,6 @@
 package no.nav.helse.flex
 
 import no.nav.helse.flex.Testoppsett.Companion.pdlMockWebserver
-
 import no.nav.helse.flex.client.pdl.HentNavn
 import no.nav.helse.flex.client.pdl.HentNavnResponse
 import no.nav.helse.flex.client.pdl.HentNavnResponseData
@@ -27,6 +26,4 @@ fun mockPdlResponse(
         .setHeader(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
     pdlMockWebserver.enqueue(response)
-
 }
-

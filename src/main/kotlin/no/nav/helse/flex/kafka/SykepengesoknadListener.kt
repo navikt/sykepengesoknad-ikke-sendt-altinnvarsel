@@ -8,7 +8,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
-import java.time.Instant
 
 @Component
 class SykepengesoknadListener(
@@ -22,7 +21,7 @@ class SykepengesoknadListener(
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         val soknad = cr.value().tilSykepengesoknadDTO()
-        varselPlanlegger.planleggVarsler(soknad, Instant.ofEpochMilli(cr.timestamp()))
+        varselPlanlegger.planleggVarsler(soknad)
         acknowledgment.acknowledge()
     }
 

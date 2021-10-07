@@ -41,8 +41,6 @@ no.nav.security.jwt:
 
 elector.path: dont_look_for_leader
 
-varsel-kafka-timestamp-start: 2021-09-06T12:00:00.000000+02:00
-
 altinn:
   username: altinnbrukern
   password: altinnpassord

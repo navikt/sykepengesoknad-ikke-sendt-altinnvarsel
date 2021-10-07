@@ -66,7 +66,6 @@ abstract class Testoppsett {
         }
     }
 
-
     @AfterAll
     fun `Vi tømmer databasen`() {
         narmesteLederRepository.deleteAll()
