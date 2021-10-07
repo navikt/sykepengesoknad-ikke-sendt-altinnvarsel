@@ -26,7 +26,7 @@ class KafkaErrorHandler : SeekToCurrentErrorHandler(
 
         records?.forEach { record ->
             log.error(
-                "Feil i prossesseringen av record med offset: ${record.offset()}, key: ${record.key()}",
+                "Feil i prossesseringen av record med offset: ${record.offset()}, key: ${record.key()} på topic ${record.topic()}",
             )
         }
 
