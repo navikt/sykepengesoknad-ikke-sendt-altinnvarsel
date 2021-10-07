@@ -38,8 +38,6 @@ class AltinnClientTest : Testoppsett() {
         mockAltinn.enqueue(MockResponse().setBody(response))
 
         val altinnVarsel = AltinnVarsel(
-            id = 1,
-            aktorId = "32434",
             fnrSykmeldt = "123123",
             navnSykmeldt = "Max Mekker",
             orgnummer = "234234",

@@ -2,7 +2,7 @@ package no.nav.helse.flex.varsler.domain
 
 import org.springframework.data.annotation.Id
 import java.time.Instant
-import java.util.*
+import java.time.LocalDate
 
 data class PlanlagtVarsel(
     @Id
@@ -14,6 +14,8 @@ data class PlanlagtVarsel(
     val status: PlanlagtVarselStatus,
     val varselType: PlanlagtVarselType,
     val sendes: Instant,
+    val soknadFom: LocalDate,
+    val soknadTom: LocalDate
 )
 
 enum class PlanlagtVarselStatus {

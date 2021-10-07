@@ -79,6 +79,8 @@ class VarselPlanlegger(
                 SoknadstypeDTO.GRADERT_REISETILSKUDD -> PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD_MED_REISETILSKUDD
                 else -> throw RuntimeException("Har ikke satt opp altinnvarsel for søknadtype ${this.type}")
             },
+            soknadTom = tom!!,
+            soknadFom = fom!!,
         )
         planlagtVarselRepository.save(planlagtVarsel)
         log.info("Planlegger varsel ${planlagtVarsel.varselType} for soknad $id som sendes ${planlagtVarsel.sendes}")

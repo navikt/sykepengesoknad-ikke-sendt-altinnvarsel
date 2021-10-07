@@ -1,6 +1,5 @@
 package no.nav.helse.flex
 
-import no.nav.helse.flex.varsler.*
 import no.nav.helse.flex.varsler.domain.PlanlagtVarsel
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus.*
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD
@@ -12,6 +11,7 @@ import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.util.*
@@ -26,6 +26,8 @@ class VarselTest : Testoppsett() {
         id = UUID.randomUUID().toString(),
         type = SoknadstypeDTO.ARBEIDSTAKERE,
         status = SoknadsstatusDTO.NY,
+        fom = LocalDate.now().minusDays(1),
+        tom = LocalDate.now(),
         arbeidssituasjon = ArbeidssituasjonDTO.ARBEIDSTAKER,
         arbeidsgiver = ArbeidsgiverDTO(navn = "Bedriften AS", orgnummer = orgnummer)
     )
@@ -86,6 +88,8 @@ class VarselTest : Testoppsett() {
         planlagtVarsel.orgnummer `should be equal to` soknad.arbeidsgiver!!.orgnummer
         planlagtVarsel.varselType `should be equal to` IKKE_SENDT_SYKEPENGESOKNAD
         planlagtVarsel.status `should be equal to` PLANLAGT
+        planlagtVarsel.soknadFom `should be equal to` LocalDate.now().minusDays(1)
+        planlagtVarsel.soknadTom `should be equal to` LocalDate.now()
         planlagtVarsel.sendes.shouldBeBefore(OffsetDateTime.now().plusDays(24).toInstant())
         planlagtVarsel.sendes.shouldBeAfter(OffsetDateTime.now().plusDays(20).toInstant())
 
