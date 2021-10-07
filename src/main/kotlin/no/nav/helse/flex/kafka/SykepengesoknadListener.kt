@@ -6,12 +6,14 @@ import no.nav.helse.flex.objectMapper
 import no.nav.helse.flex.varsler.VarselPlanlegger
 import no.nav.syfo.kafka.felles.SykepengesoknadDTO
 import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.springframework.context.annotation.Profile
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
 import java.time.Instant
 
 @Component
+@Profile("test")
 class SykepengesoknadListener(
     val varselPlanlegger: VarselPlanlegger
 ) {
