@@ -4,18 +4,20 @@ import no.altinn.schemas.services.serviceengine.correspondence._2010._10.Externa
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.InsertCorrespondenceV2
 import no.altinn.schemas.services.serviceengine.notification._2009._10.Notification
 import no.altinn.schemas.services.serviceengine.notification._2009._10.NotificationBEList
-import no.nav.helse.flex.config.EnvironmentToggles
+import no.nav.helse.flex.logger
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselType
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.format.DateTimeFormatter
 import javax.xml.bind.JAXBElement
 import javax.xml.namespace.QName
 
-@Component class AltinnVarselMapper(
-    private val devOrgnummerWhitelist: DevOrgnummerWhitelist,
-    private val env: EnvironmentToggles
-
+@Component
+class AltinnVarselMapper(
+    @Value("\${overstyr.orgnr:false}") private val overstyrOrgnr: Boolean
 ) {
+    val log = logger()
+
     fun mapAltinnVarselTilInsertCorrespondence(altinnVarsel: AltinnVarsel): InsertCorrespondenceV2 {
         val namespace = "http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10"
         val varsel = when (altinnVarsel.type) {
@@ -75,10 +77,12 @@ import javax.xml.namespace.QName
     }
 
     private fun getOrgnummerForSendingTilAltinn(orgnummer: String): String {
-        return if (env.isProduction() || devOrgnummerWhitelist.allowsOrgnummer(orgnummer)) {
+        return if (overstyrOrgnr) {
+            log.warn("Overstyrer orgnummer i altinninnsendelse")
+            // dette er default orgnummer i test: 'GODVIK OG FLATÅSEN'
+            "910067494"
+        } else
             orgnummer
-        } else "910067494"
-        // dette er default orgnummer i test: 'GODVIK OG FLATÅSEN'
     }
 
     companion object {
@@ -131,6 +135,7 @@ import javax.xml.namespace.QName
 Vennlig hilsen NAV"""
         )
     )
+
     private fun arbeidstakerGradertReisetilskuddAltinnVarsel(
         altinnVarsel: AltinnVarsel
     ) = VarselInnhold(

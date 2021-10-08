@@ -35,7 +35,6 @@ abstract class Testoppsett {
     lateinit var planlagtVarselRepository: PlanlagtVarselRepository
 
     final val fnr = "12345678901"
-    final val aktorId = "aktorid123"
 
     companion object {
         var altinnMockWebserver: MockWebServer
