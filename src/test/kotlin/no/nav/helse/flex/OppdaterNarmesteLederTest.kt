@@ -30,6 +30,7 @@ class OppdaterNarmesteLederTest : Testoppsett() {
         val narmesteLeder = narmesteLederRepository.findByNarmesteLederId(narmesteLederId)
         narmesteLeder.shouldNotBeNull()
         narmesteLeder.narmesteLederEpost `should be equal to` narmesteLederLeesah.narmesteLederEpost
+        narmesteLeder.aktivTom.shouldBeNull()
     }
 
     @Test
@@ -50,7 +51,8 @@ class OppdaterNarmesteLederTest : Testoppsett() {
             getNarmesteLederLeesah(
                 narmesteLederId,
                 telefonnummer = "98989898",
-                epost = "mail@banken.no"
+                epost = "mail@banken.no",
+                aktivTom = LocalDate.now(),
             )
         )
 
@@ -61,6 +63,7 @@ class OppdaterNarmesteLederTest : Testoppsett() {
         val oppdaterNl = narmesteLederRepository.findByNarmesteLederId(narmesteLederId)!!
         oppdaterNl.narmesteLederTelefonnummer `should be equal to` "98989898"
         oppdaterNl.narmesteLederEpost `should be equal to` "mail@banken.no"
+        oppdaterNl.aktivTom `should be equal to` LocalDate.now()
     }
 }
 
