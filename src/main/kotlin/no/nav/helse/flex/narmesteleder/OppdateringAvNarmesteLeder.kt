@@ -40,6 +40,7 @@ private fun NarmesteLederLeesah.tilNarmesteLeder(id: String?): NarmesteLeder = N
     narmesteLederTelefonnummer = narmesteLederTelefonnummer,
     narmesteLederEpost = narmesteLederEpost,
     aktivFom = aktivFom,
+    aktivTom = aktivTom,
     arbeidsgiverForskutterer = arbeidsgiverForskutterer,
     timestamp = timestamp.toInstant(),
     oppdatert = Instant.now()

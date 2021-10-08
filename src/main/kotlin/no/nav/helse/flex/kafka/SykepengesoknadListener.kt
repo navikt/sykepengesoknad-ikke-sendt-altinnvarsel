@@ -17,7 +17,6 @@ class SykepengesoknadListener(
     @KafkaListener(
         topics = [FLEX_SYKEPENGESOKNAD_TOPIC],
         containerFactory = "aivenKafkaListenerContainerFactory",
-        groupId = "sykepengesoknad-ikke-sendt-altinnvarsel-2"
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         val soknad = cr.value().tilSykepengesoknadDTO()
