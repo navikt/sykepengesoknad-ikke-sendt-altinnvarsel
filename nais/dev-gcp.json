@@ -12,6 +12,6 @@
     "PDL_BASE_URL": "https://pdl-api.dev-fss-pub.nais.io",
     "PDL_API_AAD_CLIENT_ID": "dev-fss.pdl.pdl-api",
     "ALTINN_URL": "https://tt02.altinn.no",
-    "OVERSTYR_ORGNR": "true"
+    "OVERSTYR_ORGNR": "ja"
   }
 }

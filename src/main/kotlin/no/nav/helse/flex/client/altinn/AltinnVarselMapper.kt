@@ -14,7 +14,7 @@ import javax.xml.namespace.QName
 
 @Component
 class AltinnVarselMapper(
-    @Value("\${overstyr.orgnr:false}") private val overstyrOrgnr: Boolean
+    @Value("\${overstyr.orgnr:nei}") private val overstyrOrgnr: String
 ) {
     val log = logger()
 
@@ -77,7 +77,7 @@ class AltinnVarselMapper(
     }
 
     private fun getOrgnummerForSendingTilAltinn(orgnummer: String): String {
-        return if (overstyrOrgnr) {
+        return if (overstyrOrgnr == "ja") {
             log.warn("Overstyrer orgnummer i altinninnsendelse")
             // dette er default orgnummer i test: 'GODVIK OG FLATÅSEN'
             "910067494"
