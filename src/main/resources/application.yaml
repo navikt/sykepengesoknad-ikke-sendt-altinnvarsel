@@ -15,7 +15,6 @@ spring:
       minimum-idle: 1
       maximum-pool-size: 3
 
-nais.cluster: ${NAIS_CLUSTER_NAME}
 
 aiven-kafka:
   auto-offset-reset: none
