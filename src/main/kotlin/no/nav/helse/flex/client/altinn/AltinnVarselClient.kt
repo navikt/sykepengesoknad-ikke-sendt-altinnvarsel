@@ -22,7 +22,7 @@ class AltinnVarselClient(
             val receiptExternal = iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(
                 username, password,
                 SYSTEM_USER_CODE,
-                altinnVarsel.ressursId,
+                altinnVarsel.planlagtVarsel.sykepengesoknadId,
                 altinnVarselMapper.mapAltinnVarselTilInsertCorrespondence(altinnVarsel)
             )
             if (receiptExternal.receiptStatusCode != ReceiptStatusEnum.OK) {

@@ -1,6 +1,8 @@
 package no.nav.helse.flex
 
+import no.nav.helse.flex.varsler.VarselUtsendelse
 import no.nav.helse.flex.varsler.domain.PlanlagtVarsel
+import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus.*
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD
 import no.nav.syfo.kafka.felles.*
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
+import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
@@ -38,6 +41,9 @@ class VarselTest : Testoppsett() {
             OffsetDateTime.now().plusDays(dager.toLong())
         )
     }
+
+    @Autowired
+    lateinit var varselUtsendelse: VarselUtsendelse
 
     @Test
     @Order(0)
@@ -102,7 +108,6 @@ class VarselTest : Testoppsett() {
         planlagteVarslerSomSendesFør(dager = 25).size `should be equal to` 1
         planlagtVarselRepository.findBySykepengesoknadId(soknad.id).size `should be equal to` 1
         planlagteVarslerSomSendesFør(dager = 30).size `should be equal to` 1
-        planlagteVarslerSomSendesFør(dager = 3).size `should be equal to` 0
         val soknaden = soknad.copy(status = SENDT, sendtArbeidsgiver = LocalDateTime.now())
         sendSykepengesoknad(soknaden)
 
@@ -119,6 +124,62 @@ class VarselTest : Testoppsett() {
         avbruttVarsel.orgnummer `should be equal to` soknad.arbeidsgiver!!.orgnummer
         avbruttVarsel.varselType `should be equal to` IKKE_SENDT_SYKEPENGESOKNAD
         avbruttVarsel.status `should be equal to` AVBRUTT
+        planlagteVarslerSomSendesFør(dager = 25).size `should be equal to` 0
+    }
+
+    @Test
+    @Order(3)
+    fun `Vi mottar en søknad med status NY, prøver å sende varselet, men arbeidsgiveren forskutterer ikke`() {
+        planlagteVarslerSomSendesFør(dager = 25).size `should be equal to` 0
+
+        val soknaden = soknad.copy(id = UUID.randomUUID().toString())
+        sendSykepengesoknad(soknaden)
+
+        await().atMost(5, SECONDS).until {
+            planlagtVarselRepository.findBySykepengesoknadId(soknaden.id).isNotEmpty()
+        }
+        planlagteVarslerSomSendesFør(dager = 25).size `should be equal to` 1
+
+        varselUtsendelse.sendVarsler(OffsetDateTime.now().plusDays(25)) `should be equal to` 0
+        planlagtVarselRepository.findBySykepengesoknadId(soknaden.id).first().status `should be` INGEN_FORSKUTTERING
+        planlagteVarslerSomSendesFør(dager = 25).size `should be equal to` 0
+    }
+
+    @Test
+    @Order(5)
+    fun `Vi mottar en søknad med status NY, prøver å sende varselet som blir sendt siden arbeidsgiveren forskutterer`() {
+        planlagteVarslerSomSendesFør(dager = 25).size `should be equal to` 0
+
+        val soknaden = soknad.copy(id = UUID.randomUUID().toString())
+        sendSykepengesoknad(soknaden)
+
+        val narmesteLederLeesah = getNarmesteLederLeesah(
+            narmesteLederId = UUID.randomUUID(),
+            arbeidsgiverForskutterer = true,
+            fnr = soknaden.fnr,
+            orgnummer = soknaden.arbeidsgiver!!.orgnummer!!
+        )
+
+        narmesteLederRepository.finnForskuttering(narmesteLederLeesah.fnr, narmesteLederLeesah.orgnummer)?.arbeidsgiverForskutterer.shouldBeNull()
+
+        sendNarmesteLederLeesah(narmesteLederLeesah)
+
+        await().atMost(5, SECONDS).until {
+            narmesteLederRepository.findByNarmesteLederId(narmesteLederLeesah.narmesteLederId) != null
+        }
+
+        await().atMost(5, SECONDS).until {
+            planlagtVarselRepository.findBySykepengesoknadId(soknaden.id).isNotEmpty()
+        }
+        planlagteVarslerSomSendesFør(dager = 25).size `should be equal to` 1
+
+        mockPdlResponse()
+        mockAltinnResponse()
+
+        varselUtsendelse.sendVarsler(OffsetDateTime.now().plusDays(25)) `should be equal to` 1
+        varselUtsendelse.sendVarsler(OffsetDateTime.now().plusDays(25)) `should be equal to` 0
+
+        planlagtVarselRepository.findBySykepengesoknadId(soknaden.id).first().status `should be` PlanlagtVarselStatus.SENDT
         planlagteVarslerSomSendesFør(dager = 25).size `should be equal to` 0
     }
 }
