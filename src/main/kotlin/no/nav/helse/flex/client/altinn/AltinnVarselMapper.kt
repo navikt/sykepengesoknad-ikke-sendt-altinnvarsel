@@ -20,7 +20,7 @@ class AltinnVarselMapper(
 
     fun mapAltinnVarselTilInsertCorrespondence(altinnVarsel: AltinnVarsel): InsertCorrespondenceV2 {
         val namespace = "http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10"
-        val varsel = when (altinnVarsel.type) {
+        val varsel = when (altinnVarsel.planlagtVarsel.varselType) {
             PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD -> arbeidstakerSykepengesoknadAltinnVarsel(altinnVarsel)
             PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD_MED_REISETILSKUDD -> arbeidstakerGradertReisetilskuddAltinnVarsel(altinnVarsel)
         }
@@ -30,7 +30,7 @@ class AltinnVarselMapper(
             .withReportee(
                 JAXBElement(
                     QName(namespace, "Reportee"), String::class.java,
-                    getOrgnummerForSendingTilAltinn(altinnVarsel.orgnummer)
+                    getOrgnummerForSendingTilAltinn(altinnVarsel.planlagtVarsel.orgnummer)
                 )
             )
             .withMessageSender(
@@ -78,7 +78,7 @@ class AltinnVarselMapper(
 
     private fun getOrgnummerForSendingTilAltinn(orgnummer: String): String {
         return if (overstyrOrgnr == "ja") {
-            log.warn("Overstyrer orgnummer i altinninnsendelse")
+            log.warn("Overstyrer orgnummer i altinninnsendelse til 910067494")
             // dette er default orgnummer i test: 'GODVIK OG FLATÅSEN'
             "910067494"
         } else
@@ -102,7 +102,7 @@ class AltinnVarselMapper(
     private fun arbeidstakerSykepengesoknadAltinnVarsel(
         altinnVarsel: AltinnVarsel
     ) = VarselInnhold(
-        tittel = "Manglende søknad om sykepenger - " + altinnVarsel.navnSykmeldt + " (" + altinnVarsel.fnrSykmeldt + ")",
+        tittel = "Manglende søknad om sykepenger - " + altinnVarsel.navnSykmeldt + " (" + altinnVarsel.planlagtVarsel.brukerFnr + ")",
         innhold = """<html>
    <head>
        <meta charset="UTF-8">
@@ -110,10 +110,10 @@ class AltinnVarselMapper(
    <body>
        <div class="melding">
            <h2>Søknad om sykepenger</h2>
-           <p>${altinnVarsel.navnSykmeldt} (${altinnVarsel.fnrSykmeldt}) har fått en søknad om sykepenger til utfylling, men har foreløpig ikke sendt den inn.</p>
-           <p>Perioden søknaden gjelder for er ${formatter.format(altinnVarsel.soknadFom)}-${
+           <p>${altinnVarsel.navnSykmeldt} (${altinnVarsel.planlagtVarsel.brukerFnr}) har fått en søknad om sykepenger til utfylling, men har foreløpig ikke sendt den inn.</p>
+           <p>Perioden søknaden gjelder for er ${formatter.format(altinnVarsel.planlagtVarsel.soknadFom)}-${
         formatter.format(
-            altinnVarsel.soknadTom
+            altinnVarsel.planlagtVarsel.soknadTom
         )
         }</p>
            <h4>Om denne meldingen:</h4>
@@ -139,7 +139,7 @@ Vennlig hilsen NAV"""
     private fun arbeidstakerGradertReisetilskuddAltinnVarsel(
         altinnVarsel: AltinnVarsel
     ) = VarselInnhold(
-        tittel = "Manglende søknad om sykepenger med reisetilskudd - " + altinnVarsel.navnSykmeldt + " (" + altinnVarsel.fnrSykmeldt + ")",
+        tittel = "Manglende søknad om sykepenger med reisetilskudd - " + altinnVarsel.navnSykmeldt + " (" + altinnVarsel.planlagtVarsel.brukerFnr + ")",
         innhold = """<html>
    <head>
        <meta charset="UTF-8">
@@ -147,10 +147,10 @@ Vennlig hilsen NAV"""
    <body>
        <div class="melding">
            <h2>Søknad om sykepenger med reisetilskudd</h2>
-           <p>${altinnVarsel.navnSykmeldt} (${altinnVarsel.fnrSykmeldt}) har fått en søknad om sykepenger med reisetilskudd til utfylling, men har foreløpig ikke sendt den inn.</p>
-           <p>Perioden søknaden gjelder for er ${formatter.format(altinnVarsel.soknadFom)}-${
+           <p>${altinnVarsel.navnSykmeldt} (${altinnVarsel.planlagtVarsel.brukerFnr}) har fått en søknad om sykepenger med reisetilskudd til utfylling, men har foreløpig ikke sendt den inn.</p>
+           <p>Perioden søknaden gjelder for er ${formatter.format(altinnVarsel.planlagtVarsel.soknadFom)}-${
         formatter.format(
-            altinnVarsel.soknadTom
+            altinnVarsel.planlagtVarsel.soknadTom
         )
         }</p>
            <h4>Om denne meldingen:</h4>

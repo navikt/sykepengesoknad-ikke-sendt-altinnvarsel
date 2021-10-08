@@ -3,13 +3,15 @@ package no.nav.helse.flex
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2
 import no.nav.helse.flex.client.altinn.AltinnVarsel
 import no.nav.helse.flex.client.altinn.AltinnVarselClient
+import no.nav.helse.flex.varsler.domain.PlanlagtVarsel
+import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselType
-import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
 import org.amshove.kluent.`should be equal to`
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.io.StringReader
+import java.time.Instant
 import java.time.LocalDate
 import java.util.*
 import javax.xml.bind.JAXBContext
@@ -24,27 +26,23 @@ class AltinnClientTest : Testoppsett() {
 
     @Test
     fun `test webservice kall til altinn`() {
-        val response = """
-    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-        <soap:Body>
-            <InsertCorrespondenceBasicV2Response xmlns="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10" xmlns:res="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10">
-                <InsertCorrespondenceBasicV2Result>
-                    <res:ReceiptStatusCode>OK</res:ReceiptStatusCode>
-                </InsertCorrespondenceBasicV2Result>
-            </InsertCorrespondenceBasicV2Response>
-        </soap:Body>
-    </soap:Envelope>"""
 
-        altinnMockWebserver.enqueue(MockResponse().setBody(response))
+        mockAltinnResponse()
 
         val altinnVarsel = AltinnVarsel(
-            fnrSykmeldt = "123123",
             navnSykmeldt = "Max Mekker",
-            orgnummer = "234234",
-            ressursId = UUID.randomUUID().toString(),
-            soknadFom = LocalDate.now(),
-            soknadTom = LocalDate.now(),
-            type = PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD
+            planlagtVarsel = PlanlagtVarsel(
+                brukerFnr = "123123",
+                orgnummer = "234234",
+                sykepengesoknadId = UUID.randomUUID().toString(),
+                soknadFom = LocalDate.now(),
+                soknadTom = LocalDate.now(),
+                varselType = PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD,
+                id = null,
+                oppdatert = Instant.now(),
+                sendes = Instant.now(),
+                status = PlanlagtVarselStatus.PLANLAGT,
+            )
         )
 
         altinnVarselClient.sendManglendeInnsendingAvSoknadMeldingTilArbeidsgiver(altinnVarsel)
@@ -54,6 +52,7 @@ class AltinnClientTest : Testoppsett() {
         val insertCorrespondenceBasicV2 = soapRequest.parseCorrespondence()
         insertCorrespondenceBasicV2.systemUserCode `should be equal to` "NAV_DIGISYFO"
         insertCorrespondenceBasicV2.correspondence.content.value.messageTitle.value `should be equal to` "Manglende søknad om sykepenger - Max Mekker (123123)"
+        insertCorrespondenceBasicV2.correspondence.reportee.value `should be equal to` "234234"
         soapRequest.path `should be equal to` "/ServiceEngineExternal/CorrespondenceAgencyExternalBasic.svc"
         soapRequest.method `should be equal to` "POST"
     }

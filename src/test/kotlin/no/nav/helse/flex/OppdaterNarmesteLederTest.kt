@@ -85,12 +85,14 @@ fun getNarmesteLederLeesah(
     telefonnummer: String = "90909090",
     epost: String = "test@nav.no",
     aktivTom: LocalDate? = null,
+    fnr: String = "12345678910",
+    orgnummer: String = "999999",
     arbeidsgiverForskutterer: Boolean? = true
 ): NarmesteLederLeesah =
     NarmesteLederLeesah(
         narmesteLederId = narmesteLederId,
-        fnr = "12345678910",
-        orgnummer = "999999",
+        fnr = fnr,
+        orgnummer = orgnummer,
         narmesteLederFnr = "01987654321",
         narmesteLederTelefonnummer = telefonnummer,
         narmesteLederEpost = epost,
