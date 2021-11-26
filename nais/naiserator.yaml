@@ -36,9 +36,9 @@ spec:
   gcp:
     sqlInstances:
       - type: POSTGRES_12
+        diskAutoresize: true
         databases:
           - name: sykepengesoknad-ikke-sendt-altinnvarsel-db
-            diskAutoresize: true
   accessPolicy:
     outbound:
       external:
