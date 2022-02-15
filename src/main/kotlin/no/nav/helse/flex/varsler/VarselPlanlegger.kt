@@ -1,15 +1,15 @@
 package no.nav.helse.flex.varsler
 
 import no.nav.helse.flex.logger
+import no.nav.helse.flex.sykepengesoknad.kafka.ArbeidssituasjonDTO.ARBEIDSTAKER
+import no.nav.helse.flex.sykepengesoknad.kafka.SoknadsstatusDTO.*
+import no.nav.helse.flex.sykepengesoknad.kafka.SoknadstypeDTO
+import no.nav.helse.flex.sykepengesoknad.kafka.SoknadstypeDTO.REISETILSKUDD
+import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import no.nav.helse.flex.varsler.domain.PlanlagtVarsel
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus.PLANLAGT
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselType
-import no.nav.syfo.kafka.felles.ArbeidssituasjonDTO.ARBEIDSTAKER
-import no.nav.syfo.kafka.felles.SoknadsstatusDTO.*
-import no.nav.syfo.kafka.felles.SoknadstypeDTO
-import no.nav.syfo.kafka.felles.SoknadstypeDTO.REISETILSKUDD
-import no.nav.syfo.kafka.felles.SykepengesoknadDTO
 import org.springframework.stereotype.Component
 import java.time.*
 
