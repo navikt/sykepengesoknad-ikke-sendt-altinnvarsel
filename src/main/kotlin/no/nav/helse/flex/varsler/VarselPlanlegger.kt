@@ -28,7 +28,7 @@ class VarselPlanlegger(
         if (soknad.status == NY) {
             soknad.planleggVarselForStatusNy()
         }
-        if (listOf(SENDT, AVBRUTT, SLETTET, KORRIGERT).contains(soknad.status)) {
+        if (listOf(SENDT, AVBRUTT, SLETTET, KORRIGERT, UTGAATT).contains(soknad.status)) {
             soknad.avbrytManglendeSoknadVarsler()
         }
     }
