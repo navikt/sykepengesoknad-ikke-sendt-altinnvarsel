@@ -1,12 +1,12 @@
 package no.nav.helse.flex
 
+import no.nav.helse.flex.sykepengesoknad.kafka.*
+import no.nav.helse.flex.sykepengesoknad.kafka.SoknadsstatusDTO.SENDT
 import no.nav.helse.flex.varsler.VarselUtsendelse
 import no.nav.helse.flex.varsler.domain.PlanlagtVarsel
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus.*
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD
-import no.nav.syfo.kafka.felles.*
-import no.nav.syfo.kafka.felles.SoknadsstatusDTO.SENDT
 import org.amshove.kluent.*
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.MethodOrderer
@@ -38,7 +38,7 @@ class VarselTest : Testoppsett() {
     fun planlagteVarslerSomSendesFør(dager: Int): List<PlanlagtVarsel> {
         return planlagtVarselRepository.findFirst300ByStatusAndSendesIsBefore(
             PLANLAGT,
-            OffsetDateTime.now().plusDays(dager.toLong())
+            OffsetDateTime.now().plusDays(dager.toLong()).toInstant()
         )
     }
 
@@ -140,7 +140,7 @@ class VarselTest : Testoppsett() {
         }
         planlagteVarslerSomSendesFør(dager = 25).size `should be equal to` 1
 
-        varselUtsendelse.sendVarsler(OffsetDateTime.now().plusDays(25)) `should be equal to` 0
+        varselUtsendelse.sendVarsler(OffsetDateTime.now().plusDays(25).toInstant()) `should be equal to` 0
         planlagtVarselRepository.findBySykepengesoknadId(soknaden.id).first().status `should be` INGEN_FORSKUTTERING
         planlagteVarslerSomSendesFør(dager = 25).size `should be equal to` 0
     }
@@ -176,8 +176,8 @@ class VarselTest : Testoppsett() {
         mockPdlResponse()
         mockAltinnResponse()
 
-        varselUtsendelse.sendVarsler(OffsetDateTime.now().plusDays(25)) `should be equal to` 1
-        varselUtsendelse.sendVarsler(OffsetDateTime.now().plusDays(25)) `should be equal to` 0
+        varselUtsendelse.sendVarsler(OffsetDateTime.now().plusDays(25).toInstant()) `should be equal to` 1
+        varselUtsendelse.sendVarsler(OffsetDateTime.now().plusDays(25).toInstant()) `should be equal to` 0
 
         planlagtVarselRepository.findBySykepengesoknadId(soknaden.id).first().status `should be` PlanlagtVarselStatus.SENDT
         planlagteVarslerSomSendesFør(dager = 25).size `should be equal to` 0

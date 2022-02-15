@@ -13,7 +13,6 @@ import no.nav.helse.flex.varsler.domain.PlanlagtVarselType
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 import java.time.Instant
-import java.time.OffsetDateTime
 
 @Component
 class VarselUtsendelse(
@@ -26,7 +25,7 @@ class VarselUtsendelse(
 
     val log = logger()
 
-    fun sendVarsler(now: OffsetDateTime = OffsetDateTime.now()): Int {
+    fun sendVarsler(now: Instant = Instant.now()): Int {
         val planlagteVarsler =
             planlagtVarselRepository.findFirst300ByStatusAndSendesIsBefore(PLANLAGT, now)
         var varslerSendt = 0
