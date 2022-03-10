@@ -7,7 +7,7 @@ Varsel om manglende sykepengesøknad planlegges sendt to uker at søknaden har b
 ## Data
 Applikasjonen har en database i GCP.
 
-Tabellen `planlagt varsel` holder oversikt over alle planlagte og sendte varsler.
+Tabellen `planlagt varsel` holder oversikt over alle planlagte, avbrutte og sendte varsler.
 Tabellen inkluderer fødselsnummer, orgnummer og sykpengesøknad_id og er derfor personidentifiserbar. Det slettes ikke data fra tabellen.
 
 Tabellen `narmeste leder` holder oversikt over alle nærmesteleder relasjoner og forskutteringsstatus fr anærmeste leder skjemaet.
