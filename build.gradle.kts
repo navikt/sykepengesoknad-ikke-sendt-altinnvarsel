@@ -48,7 +48,7 @@ val logstashLogbackEncoderVersion = "7.1.1"
 val kluentVersion = "1.68"
 val sykepengesoknadKafkaVersion = "2022.02.10-16.07-0892e94a"
 val tjenestespesifikasjonerVersion = "1.2020.01.20-15.44-063ae9f84815"
-val cxfVersion = "3.5.1"
+val cxfVersion = "3.5.2"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
