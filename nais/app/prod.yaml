@@ -1,0 +1,12 @@
+app: sykepengesoknad-ikke-sendt-altinnvarsel
+namespace: flex
+team: flex
+kafkaPool: nav-prod
+externalHosts:
+  - flex-fss-proxy.prod-fss-pub.nais.io
+  - pdl-api.prod-fss-pub.nais.io
+azureTenant: nav.no
+env:
+  PDL_BASE_URL: https://pdl-api.prod-fss-pub.nais.io
+  PDL_API_AAD_CLIENT_ID: prod-fss.pdl.pdl-api
+  ALTINN_URL: https://www.altinn.no
