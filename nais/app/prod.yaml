@@ -2,6 +2,7 @@ app: sykepengesoknad-ikke-sendt-altinnvarsel
 namespace: flex
 team: flex
 kafkaPool: nav-prod
+db_tier: db-custom-1-3840
 externalHosts:
   - flex-fss-proxy.prod-fss-pub.nais.io
   - pdl-api.prod-fss-pub.nais.io
