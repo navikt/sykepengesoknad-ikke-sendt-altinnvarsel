@@ -75,7 +75,7 @@ dependencies {
 
     implementation("com.sun.activation:jakarta.activation:2.0.1")
     implementation("com.sun.xml.bind:jaxb-impl:3.0.2")
-    implementation("com.sun.xml.bind:jaxb-core:3.0.2")
+    implementation("com.sun.xml.bind:jaxb-core:4.0.2")
     implementation("com.sun.xml.messaging.saaj:saaj-impl:1.5.1")
     implementation("javax.xml.ws:jaxws-api:2.3.1")
     implementation("javax.jws:javax.jws-api:1.1")
