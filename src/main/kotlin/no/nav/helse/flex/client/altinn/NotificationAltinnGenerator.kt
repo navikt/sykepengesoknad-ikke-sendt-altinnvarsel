@@ -48,7 +48,8 @@ internal object NotificationAltinnGenerator {
             .withFromAddress(mapNullable(fraEpost) { epost: String? -> JAXBElement(QName(NOTIFICATION_NAMESPACE, "FromAddress"), String::class.java, epost) })
             .withReceiverEndPoints(
                 JAXBElement(
-                    QName(NOTIFICATION_NAMESPACE, "ReceiverEndPoints"), ReceiverEndPointBEList::class.java,
+                    QName(NOTIFICATION_NAMESPACE, "ReceiverEndPoints"),
+                    ReceiverEndPointBEList::class.java,
                     ReceiverEndPointBEList()
                         .withReceiverEndPoint(
                             ReceiverEndPoint()
@@ -58,7 +59,8 @@ internal object NotificationAltinnGenerator {
             )
             .withTextTokens(
                 JAXBElement(
-                    QName(NOTIFICATION_NAMESPACE, "TextTokens"), TextTokenSubstitutionBEList::class.java,
+                    QName(NOTIFICATION_NAMESPACE, "TextTokens"),
+                    TextTokenSubstitutionBEList::class.java,
                     TextTokenSubstitutionBEList()
                         .withTextToken(*textTokens)
                 )

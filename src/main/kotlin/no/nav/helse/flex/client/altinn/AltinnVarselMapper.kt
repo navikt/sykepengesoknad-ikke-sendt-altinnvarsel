@@ -29,13 +29,15 @@ class AltinnVarselMapper(
             .withAllowForwarding(JAXBElement(QName(namespace, "AllowForwarding"), Boolean::class.java, false))
             .withReportee(
                 JAXBElement(
-                    QName(namespace, "Reportee"), String::class.java,
+                    QName(namespace, "Reportee"),
+                    String::class.java,
                     getOrgnummerForSendingTilAltinn(altinnVarsel.planlagtVarsel.orgnummer)
                 )
             )
             .withMessageSender(
                 JAXBElement(
-                    QName(namespace, "MessageSender"), String::class.java,
+                    QName(namespace, "MessageSender"),
+                    String::class.java,
                     "NAV (Arbeids- og velferdsetaten)"
                 )
             )
@@ -81,8 +83,9 @@ class AltinnVarselMapper(
             log.warn("Overstyrer orgnummer i altinninnsendelse til 910067494")
             // dette er default orgnummer i test: 'GODVIK OG FLATÅSEN'
             "910067494"
-        } else
+        } else {
             orgnummer
+        }
     }
 
     companion object {

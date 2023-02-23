@@ -20,7 +20,8 @@ class AltinnVarselClient(
     fun sendManglendeInnsendingAvSoknadMeldingTilArbeidsgiver(altinnVarsel: AltinnVarsel): ReceiptExternal {
         try {
             val receiptExternal = iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(
-                username, password,
+                username,
+                password,
                 SYSTEM_USER_CODE,
                 altinnVarsel.planlagtVarsel.sykepengesoknadId,
                 altinnVarselMapper.mapAltinnVarselTilInsertCorrespondence(altinnVarsel)

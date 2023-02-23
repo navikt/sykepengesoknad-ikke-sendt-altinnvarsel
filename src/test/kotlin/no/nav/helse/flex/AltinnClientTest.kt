@@ -26,7 +26,6 @@ class AltinnClientTest : Testoppsett() {
 
     @Test
     fun `test webservice kall til altinn`() {
-
         mockAltinnResponse()
 
         val altinnVarsel = AltinnVarsel(
@@ -41,7 +40,7 @@ class AltinnClientTest : Testoppsett() {
                 id = null,
                 oppdatert = Instant.now(),
                 sendes = Instant.now(),
-                status = PlanlagtVarselStatus.PLANLAGT,
+                status = PlanlagtVarselStatus.PLANLAGT
             )
         )
 
@@ -63,7 +62,6 @@ class AltinnClientTest : Testoppsett() {
         while (sr.hasNext()) {
             val type = sr.next()
             if (type == XMLStreamReader.START_ELEMENT && "InsertCorrespondenceBasicV2" == sr.localName) {
-
                 val jc: JAXBContext = JAXBContext.newInstance(InsertCorrespondenceBasicV2::class.java)
                 val unmarshaller = jc.createUnmarshaller()
                 val je: JAXBElement<InsertCorrespondenceBasicV2> = unmarshaller.unmarshal(sr, InsertCorrespondenceBasicV2::class.java)

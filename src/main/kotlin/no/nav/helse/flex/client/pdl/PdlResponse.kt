@@ -15,11 +15,11 @@ data class HentNavnResponse(
 )
 
 data class HentNavnResponseData(
-    val hentPerson: HentNavn? = null,
+    val hentPerson: HentNavn? = null
 )
 
 data class HentNavn(
-    val navn: List<Navn>? = null,
+    val navn: List<Navn>? = null
 )
 
 data class Navn(

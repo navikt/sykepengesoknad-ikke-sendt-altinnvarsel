@@ -41,7 +41,6 @@ query(${"$"}ident: ID!){
 
     @Retryable(exclude = [FunctionalPdlError::class])
     fun hentFormattertNavn(fnr: String): String {
-
         val graphQLRequest = GraphQLRequest(
             query = HENT_NAVN_QUERY,
             variables = Collections.singletonMap(IDENT, fnr)

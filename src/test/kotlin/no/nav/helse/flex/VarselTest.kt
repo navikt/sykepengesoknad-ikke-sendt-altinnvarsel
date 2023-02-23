@@ -48,7 +48,6 @@ class VarselTest : Testoppsett() {
     @Test
     @Order(0)
     fun `Arbeidsledig, frilanser og sånt skaper ikke planlagt varsel`() {
-
         planlagtVarselRepository.findAll().iterator().asSequence().toList().isEmpty()
 
         val arbeidsledig = SykepengesoknadDTO(
@@ -56,14 +55,14 @@ class VarselTest : Testoppsett() {
             id = UUID.randomUUID().toString(),
             type = SoknadstypeDTO.ARBEIDSLEDIG,
             status = SoknadsstatusDTO.NY,
-            arbeidssituasjon = ArbeidssituasjonDTO.ARBEIDSLEDIG,
+            arbeidssituasjon = ArbeidssituasjonDTO.ARBEIDSLEDIG
         )
         val frilanser = SykepengesoknadDTO(
             fnr = fnr,
             id = UUID.randomUUID().toString(),
             type = SoknadstypeDTO.SELVSTENDIGE_OG_FRILANSERE,
             status = SoknadsstatusDTO.NY,
-            arbeidssituasjon = ArbeidssituasjonDTO.FRILANSER,
+            arbeidssituasjon = ArbeidssituasjonDTO.FRILANSER
         )
 
         sendSykepengesoknad(arbeidsledig)
@@ -79,7 +78,6 @@ class VarselTest : Testoppsett() {
     @Test
     @Order(1)
     fun `Vi mottar en søknad med status NY og planlegger et manglende søknad varsel`() {
-
         planlagteVarslerSomSendesFør(dager = 20).size `should be equal to` 0
 
         sendSykepengesoknad(soknad)

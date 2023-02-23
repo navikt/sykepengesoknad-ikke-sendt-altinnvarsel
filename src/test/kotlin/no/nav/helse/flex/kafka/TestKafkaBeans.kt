@@ -12,7 +12,7 @@ import java.io.Serializable
 
 @Configuration
 class TestKafkaBeans(
-    private val kafkaConfig: KafkaConfig,
+    private val kafkaConfig: KafkaConfig
 ) {
 
     @Bean
@@ -27,7 +27,7 @@ class TestKafkaBeans(
         ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to false,
         ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
         ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
-        ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest",
+        ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest"
 
     ) + kafkaConfig.commonConfig()
 
@@ -37,7 +37,7 @@ class TestKafkaBeans(
             ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG to "true",
             ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION to "1",
             ProducerConfig.MAX_BLOCK_MS_CONFIG to "15000",
-            ProducerConfig.RETRIES_CONFIG to "100000",
+            ProducerConfig.RETRIES_CONFIG to "100000"
         )
     }
 

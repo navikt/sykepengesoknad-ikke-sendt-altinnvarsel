@@ -15,7 +15,7 @@ import java.time.*
 
 @Component
 class VarselPlanlegger(
-    private val planlagtVarselRepository: PlanlagtVarselRepository,
+    private val planlagtVarselRepository: PlanlagtVarselRepository
 ) {
 
     val log = logger()
@@ -41,7 +41,7 @@ class VarselPlanlegger(
                     planlagtVarselRepository.save(
                         it.copy(
                             status = PlanlagtVarselStatus.AVBRUTT,
-                            oppdatert = Instant.now(),
+                            oppdatert = Instant.now()
                         )
                     )
                 }
@@ -49,7 +49,6 @@ class VarselPlanlegger(
     }
 
     private fun SykepengesoknadDTO.planleggVarselForStatusNy() {
-
         val harAlleredePlanlagt = planlagtVarselRepository.findBySykepengesoknadId(id).isNotEmpty()
 
         if (harAlleredePlanlagt) {
@@ -73,7 +72,7 @@ class VarselPlanlegger(
                 else -> throw RuntimeException("Har ikke satt opp altinnvarsel for søknadtype ${this.type}")
             },
             soknadTom = tom!!,
-            soknadFom = fom!!,
+            soknadFom = fom!!
         )
         planlagtVarselRepository.save(planlagtVarsel)
         log.info("Planlegger varsel ${planlagtVarsel.varselType} for soknad $id som sendes ${planlagtVarsel.sendes}")
@@ -81,7 +80,6 @@ class VarselPlanlegger(
 }
 
 fun nærmesteFornuftigDagtid(now: ZonedDateTime = ZonedDateTime.now(osloZone)): ZonedDateTime {
-
     val dagtid = if (now.hour < 15) {
         now.withHour(now.hour.coerceAtLeast(9))
     } else {

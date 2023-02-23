@@ -61,7 +61,7 @@ class VarselUtsendelse(
             planlagtVarselRepository.save(
                 planlagtVarsel.copy(
                     oppdatert = Instant.now(),
-                    status = SENDT,
+                    status = SENDT
                 )
             )
             lagreMetrikk(SENDT, planlagtVarsel.varselType)
@@ -74,8 +74,10 @@ class VarselUtsendelse(
         registry.counter(
             "planlagt_varsel_behandlet",
             Tags.of(
-                "status", status.name,
-                "type", type.name,
+                "status",
+                status.name,
+                "type",
+                type.name
             )
         ).increment()
     }
