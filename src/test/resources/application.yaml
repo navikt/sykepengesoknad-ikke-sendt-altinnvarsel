@@ -19,8 +19,6 @@ KAFKA_SCHEMA_REGISTRY: ""
 KAFKA_SCHEMA_REGISTRY_USER: ""
 KAFKA_SCHEMA_REGISTRY_PASSWORD: ""
 
-flex.fss.proxy.url: http://flex-fss-proxy
-
 nais.cluster: test
 
 logging.config: "classpath:logback-local.xml"

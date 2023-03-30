@@ -3,9 +3,9 @@ namespace: flex
 team: flex
 kafkaPool: nav-dev
 db_tier: db-f1-micro
-externalHosts:
-  - flex-fss-proxy.dev-fss-pub.nais.io
+external-host:
   - pdl-api.dev-fss-pub.nais.io
+  - tt02.altinn.no
 azureTenant: trygdeetaten.no
 env:
   PDL_BASE_URL: https://pdl-api.dev-fss-pub.nais.io
