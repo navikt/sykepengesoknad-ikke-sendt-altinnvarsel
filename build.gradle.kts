@@ -75,7 +75,7 @@ dependencies {
     implementation("no.nav.tjenestespesifikasjoner:behandle-altinnmelding-v1-tjenestespesifikasjon:$tjenestespesifikasjonerVersion")
 
     // saaj-impl-2.0.0 uses the jakarta namespace instead of javax.
-    implementation("com.sun.xml.messaging.saaj:saaj-impl:1.5.3")
+    implementation("com.sun.xml.messaging.saaj:saaj-impl:3.0.1")
     // https://stackoverflow.com/questions/71095913/what-is-the-difference-between-jaxb-impl-and-jaxb-runtime
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:$bindApiVersion")
     implementation("org.glassfish.jaxb:jaxb-runtime:$jaxbRuntimeVersion")
