@@ -3,6 +3,8 @@ namespace: flex
 team: flex
 kafkaPool: nav-dev
 db_tier: db-f1-micro
+cpu: 100m
+memory: 400Mi
 external-host:
   - pdl-api.dev-fss-pub.nais.io
   - tt02.altinn.no
