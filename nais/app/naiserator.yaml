@@ -16,15 +16,11 @@ spec:
   port: 8080
   liveness:
     path: /internal/health
-    initialDelay: 10
-    timeout: 5
-    periodSeconds: 5
-    failureThreshold: 30
   readiness:
     path: /internal/health
-    initialDelay: 30
-    periodSeconds: 5
-    timeout: 5
+  startup:
+    path: /internal/health
+    initialDelay: 40
   prometheus:
     enabled: true
     path: /internal/prometheus
