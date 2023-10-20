@@ -6,6 +6,8 @@ import no.nav.helse.flex.narmesteleder.NarmesteLederRepository
 import no.nav.helse.flex.narmesteleder.domain.NarmesteLederLeesah
 import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import no.nav.helse.flex.varsler.PlanlagtVarselRepository
+import no.nav.helse.flex.varsler.domain.PlanlagtVarsel
+import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import okhttp3.mockwebserver.MockWebServer
 import org.apache.kafka.clients.producer.Producer
@@ -17,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
+import java.time.OffsetDateTime
 
 private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>("postgres:12-alpine")
 
@@ -68,6 +71,7 @@ abstract class Testoppsett {
     @AfterAll
     fun `Vi tømmer databasen`() {
         narmesteLederRepository.deleteAll()
+        planlagtVarselRepository.deleteAll()
     }
 
     fun sendSykepengesoknad(soknad: SykepengesoknadDTO) {
@@ -90,5 +94,12 @@ abstract class Testoppsett {
                 nl.serialisertTilString()
             )
         ).get()
+    }
+
+    fun planlagteVarslerSomSendesFør(dager: Int): List<PlanlagtVarsel> {
+        return planlagtVarselRepository.findFirst300ByStatusAndSendesIsBefore(
+            PlanlagtVarselStatus.PLANLAGT,
+            OffsetDateTime.now().plusDays(dager.toLong()).toInstant()
+        )
     }
 }

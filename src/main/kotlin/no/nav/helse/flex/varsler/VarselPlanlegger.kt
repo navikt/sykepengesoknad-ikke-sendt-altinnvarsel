@@ -56,6 +56,8 @@ class VarselPlanlegger(
             log.info("Har allerede planlagt varsel for status NY for soknad $id")
             return
         }
+        val nå = ZonedDateTime.now(osloZone)
+        val sendes = omTreUkerFornuftigDagtid(maxOf(nå, this.tom?.plusDays(1)?.atStartOfDay(osloZone) ?: nå))
 
         val planlagtVarsel = PlanlagtVarsel(
             id = null,
@@ -63,7 +65,7 @@ class VarselPlanlegger(
             brukerFnr = fnr,
             oppdatert = Instant.now(),
             orgnummer = arbeidsgiver!!.orgnummer!!,
-            sendes = omTreUkerFornuftigDagtid().toInstant(),
+            sendes = sendes.toInstant(),
             status = PLANLAGT,
             varselType = when (this.type) {
                 SoknadstypeDTO.ARBEIDSTAKERE,

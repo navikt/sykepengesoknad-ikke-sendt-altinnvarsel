@@ -3,7 +3,6 @@ package no.nav.helse.flex
 import no.nav.helse.flex.sykepengesoknad.kafka.*
 import no.nav.helse.flex.sykepengesoknad.kafka.SoknadsstatusDTO.SENDT
 import no.nav.helse.flex.varsler.VarselUtsendelse
-import no.nav.helse.flex.varsler.domain.PlanlagtVarsel
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus.*
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD
@@ -34,13 +33,6 @@ class VarselTest : Testoppsett() {
         arbeidssituasjon = ArbeidssituasjonDTO.ARBEIDSTAKER,
         arbeidsgiver = ArbeidsgiverDTO(navn = "Bedriften AS", orgnummer = orgnummer)
     )
-
-    fun planlagteVarslerSomSendesFør(dager: Int): List<PlanlagtVarsel> {
-        return planlagtVarselRepository.findFirst300ByStatusAndSendesIsBefore(
-            PLANLAGT,
-            OffsetDateTime.now().plusDays(dager.toLong()).toInstant()
-        )
-    }
 
     @Autowired
     lateinit var varselUtsendelse: VarselUtsendelse
