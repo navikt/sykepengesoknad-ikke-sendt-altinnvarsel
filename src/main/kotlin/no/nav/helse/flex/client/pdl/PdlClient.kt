@@ -24,6 +24,8 @@ class PdlClient(
 
     private val TEMA = "Tema"
     private val TEMA_SYK = "SYK"
+    private val BEHANDLINGSNUMMER_KEY = "Behandlingsnummer"
+    private val BEHANDLINGSNUMMER_VALUE = "B128"
     private val IDENT = "ident"
 
     private val HENT_NAVN_QUERY =
@@ -49,7 +51,7 @@ query(${"$"}ident: ID!){
         val responseEntity = pdlRestTemplate.exchange(
             "$pdlApiUrl/graphql",
             HttpMethod.POST,
-            HttpEntity(requestToJson(graphQLRequest), createHeaderWithTema()),
+            HttpEntity(requestToJson(graphQLRequest), createHeaderWithTemaAndBehandlingsnummer()),
             String::class.java
         )
 
@@ -66,9 +68,10 @@ query(${"$"}ident: ID!){
         throw FunctionalPdlError("Fant ikke person, ingen body eller data. ${parsedResponse.hentErrors()}")
     }
 
-    private fun createHeaderWithTema(): HttpHeaders {
+    private fun createHeaderWithTemaAndBehandlingsnummer(): HttpHeaders {
         val headers = createHeader()
         headers[TEMA] = TEMA_SYK
+        headers[BEHANDLINGSNUMMER_KEY] = BEHANDLINGSNUMMER_VALUE
         return headers
     }
 
