@@ -10,7 +10,12 @@ import javax.xml.ws.handler.Handler
 
 @Suppress("UNCHECKED_CAST")
 class WsClient<T> {
-    fun createPort(serviceUrl: String, portType: Class<*>?, handlers: List<Handler<*>?>?, vararg interceptors: PhaseInterceptor<out Message?>?): T {
+    fun createPort(
+        serviceUrl: String,
+        portType: Class<*>?,
+        handlers: List<Handler<*>?>?,
+        vararg interceptors: PhaseInterceptor<out Message?>?,
+    ): T {
         val jaxWsProxyFactoryBean = JaxWsProxyFactoryBean()
         jaxWsProxyFactoryBean.serviceClass = portType
         jaxWsProxyFactoryBean.address = Objects.requireNonNull(serviceUrl)

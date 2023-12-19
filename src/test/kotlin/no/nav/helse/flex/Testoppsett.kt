@@ -27,7 +27,6 @@ private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>
 @SpringBootTest
 @EnableMockOAuth2Server
 abstract class Testoppsett {
-
     @Autowired
     lateinit var kafkaProducer: Producer<String, String>
 
@@ -55,16 +54,18 @@ abstract class Testoppsett {
                 it.start()
                 System.setProperty("KAFKA_BROKERS", it.bootstrapServers)
             }
-            altinnMockWebserver = MockWebServer()
-                .also { it.start() }
-                .also {
-                    System.setProperty("altinn.url", "http://localhost:${it.port}")
-                }
+            altinnMockWebserver =
+                MockWebServer()
+                    .also { it.start() }
+                    .also {
+                        System.setProperty("altinn.url", "http://localhost:${it.port}")
+                    }
 
-            pdlMockWebserver = MockWebServer()
-                .also {
-                    System.setProperty("PDL_BASE_URL", "http://localhost:${it.port}")
-                }
+            pdlMockWebserver =
+                MockWebServer()
+                    .also {
+                        System.setProperty("PDL_BASE_URL", "http://localhost:${it.port}")
+                    }
         }
     }
 
@@ -80,8 +81,8 @@ abstract class Testoppsett {
                 FLEX_SYKEPENGESOKNAD_TOPIC,
                 null,
                 soknad.id,
-                soknad.serialisertTilString()
-            )
+                soknad.serialisertTilString(),
+            ),
         ).get()
     }
 
@@ -91,15 +92,15 @@ abstract class Testoppsett {
                 NARMESTELEDER_LEESAH_TOPIC,
                 null,
                 nl.narmesteLederId.toString(),
-                nl.serialisertTilString()
-            )
+                nl.serialisertTilString(),
+            ),
         ).get()
     }
 
     fun planlagteVarslerSomSendesFør(dager: Int): List<PlanlagtVarsel> {
         return planlagtVarselRepository.findFirst300ByStatusAndSendesIsBefore(
             PlanlagtVarselStatus.PLANLAGT,
-            OffsetDateTime.now().plusDays(dager.toLong()).toInstant()
+            OffsetDateTime.now().plusDays(dager.toLong()).toInstant(),
         )
     }
 }

@@ -15,19 +15,20 @@ import java.util.*
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class ForskutteringTest : Testoppsett() {
-
-    final val record1 = getNarmesteLederLeesah(
-        aktivTom = null,
-        arbeidsgiverForskutterer = null,
-        narmesteLederId = UUID.randomUUID()
-    )
+    final val record1 =
+        getNarmesteLederLeesah(
+            aktivTom = null,
+            arbeidsgiverForskutterer = null,
+            narmesteLederId = UUID.randomUUID(),
+        )
     final val record2 = record1.copy(arbeidsgiverForskutterer = true)
     final val record3 = record2.copy(aktivTom = LocalDate.now().minusDays(5))
-    final val record4 = getNarmesteLederLeesah(
-        aktivTom = null,
-        arbeidsgiverForskutterer = false,
-        narmesteLederId = UUID.randomUUID()
-    )
+    final val record4 =
+        getNarmesteLederLeesah(
+            aktivTom = null,
+            arbeidsgiverForskutterer = false,
+            narmesteLederId = UUID.randomUUID(),
+        )
     final val record5 = record4.copy(aktivTom = LocalDate.now().minusDays(4))
     final val record6 = record5.copy(aktivTom = LocalDate.now().minusDays(6))
 

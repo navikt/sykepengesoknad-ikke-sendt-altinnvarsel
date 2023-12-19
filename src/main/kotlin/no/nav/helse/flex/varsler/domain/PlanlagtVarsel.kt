@@ -15,13 +15,17 @@ data class PlanlagtVarsel(
     val varselType: PlanlagtVarselType,
     val sendes: Instant,
     val soknadFom: LocalDate,
-    val soknadTom: LocalDate
+    val soknadTom: LocalDate,
 )
 
 enum class PlanlagtVarselStatus {
-    PLANLAGT, SENDT, AVBRUTT, INGEN_FORSKUTTERING
+    PLANLAGT,
+    SENDT,
+    AVBRUTT,
+    INGEN_FORSKUTTERING,
 }
 
 enum class PlanlagtVarselType {
-    IKKE_SENDT_SYKEPENGESOKNAD, IKKE_SENDT_SYKEPENGESOKNAD_MED_REISETILSKUDD
+    IKKE_SENDT_SYKEPENGESOKNAD,
+    IKKE_SENDT_SYKEPENGESOKNAD_MED_REISETILSKUDD,
 }

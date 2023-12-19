@@ -10,12 +10,14 @@ import org.springframework.context.annotation.Primary
 class AltinnConfig {
     @Bean
     @Primary
-    fun iCorrespondenceAgencyExternalBasic(@Value("\${altinn.url}") altinnUrl: String): ICorrespondenceAgencyExternalBasic {
+    fun iCorrespondenceAgencyExternalBasic(
+        @Value("\${altinn.url}") altinnUrl: String,
+    ): ICorrespondenceAgencyExternalBasic {
         return WsClient<ICorrespondenceAgencyExternalBasic>()
             .createPort(
                 serviceUrl = "$altinnUrl/ServiceEngineExternal/CorrespondenceAgencyExternalBasic.svc",
                 portType = ICorrespondenceAgencyExternalBasic::class.java,
-                handlers = listOf(LogErrorHandler())
+                handlers = listOf(LogErrorHandler()),
             )
     }
 }

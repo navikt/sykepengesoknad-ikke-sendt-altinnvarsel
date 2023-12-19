@@ -20,9 +20,8 @@ class VarselUtsendelse(
     private val narmesteLederRepository: NarmesteLederRepository,
     private val pdlClient: PdlClient,
     private val altinnClient: AltinnVarselClient,
-    private val registry: MeterRegistry
+    private val registry: MeterRegistry,
 ) {
-
     val log = logger()
 
     fun sendVarsler(now: Instant = Instant.now()): Int {
@@ -39,9 +38,16 @@ class VarselUtsendelse(
                 return@forEach
             }
 
-            val forskuttering = narmesteLederRepository.finnForskuttering(orgnummer = planlagtVarsel.orgnummer, brukerFnr = planlagtVarsel.brukerFnr)?.arbeidsgiverForskutterer
+            val forskuttering =
+                narmesteLederRepository.finnForskuttering(
+                    orgnummer = planlagtVarsel.orgnummer,
+                    brukerFnr = planlagtVarsel.brukerFnr,
+                )?.arbeidsgiverForskutterer
             if (forskuttering != true) {
-                log.info("Sender ikke planlagt varsel ${planlagtVarsel.id} om manglende innsending av sykepengesøknad ${planlagtVarsel.sykepengesoknadId} da arbeidsgiver ikke forskutterer lønn")
+                log.info(
+                    "Sender ikke planlagt varsel ${planlagtVarsel.id} om manglende innsending av sykepengesøknad " +
+                        "${planlagtVarsel.sykepengesoknadId} da arbeidsgiver ikke forskutterer lønn",
+                )
                 planlagtVarselRepository.save(planlagtVarsel.copy(oppdatert = Instant.now(), status = INGEN_FORSKUTTERING))
                 lagreMetrikk(INGEN_FORSKUTTERING, planlagtVarsel.varselType)
                 return@forEach
@@ -54,15 +60,18 @@ class VarselUtsendelse(
             altinnClient.sendManglendeInnsendingAvSoknadMeldingTilArbeidsgiver(
                 AltinnVarsel(
                     planlagtVarsel = planlagtVarsel,
-                    navnSykmeldt = navn
-                )
+                    navnSykmeldt = navn,
+                ),
             )
-            log.info("Sendt planlagt varsel ${planlagtVarsel.id} for søknad ${planlagtVarsel.sykepengesoknadId} med type ${planlagtVarsel.varselType} til ${planlagtVarsel.orgnummer}")
+            log.info(
+                "Sendt planlagt varsel ${planlagtVarsel.id} for søknad ${planlagtVarsel.sykepengesoknadId} med " +
+                    "type ${planlagtVarsel.varselType} til ${planlagtVarsel.orgnummer}",
+            )
             planlagtVarselRepository.save(
                 planlagtVarsel.copy(
                     oppdatert = Instant.now(),
-                    status = SENDT
-                )
+                    status = SENDT,
+                ),
             )
             lagreMetrikk(SENDT, planlagtVarsel.varselType)
             varslerSendt++
@@ -70,15 +79,18 @@ class VarselUtsendelse(
         return varslerSendt
     }
 
-    private fun lagreMetrikk(status: PlanlagtVarselStatus, type: PlanlagtVarselType) {
+    private fun lagreMetrikk(
+        status: PlanlagtVarselStatus,
+        type: PlanlagtVarselType,
+    ) {
         registry.counter(
             "planlagt_varsel_behandlet",
             Tags.of(
                 "status",
                 status.name,
                 "type",
-                type.name
-            )
+                type.name,
+            ),
         ).increment()
     }
 }

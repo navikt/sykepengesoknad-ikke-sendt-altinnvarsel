@@ -15,9 +15,8 @@ import java.time.*
 
 @Component
 class VarselPlanlegger(
-    private val planlagtVarselRepository: PlanlagtVarselRepository
+    private val planlagtVarselRepository: PlanlagtVarselRepository,
 ) {
-
     val log = logger()
 
     fun planleggVarsler(soknad: SykepengesoknadDTO) {
@@ -41,8 +40,8 @@ class VarselPlanlegger(
                     planlagtVarselRepository.save(
                         it.copy(
                             status = PlanlagtVarselStatus.AVBRUTT,
-                            oppdatert = Instant.now()
-                        )
+                            oppdatert = Instant.now(),
+                        ),
                     )
                 }
             }
@@ -59,34 +58,38 @@ class VarselPlanlegger(
         val nå = ZonedDateTime.now(osloZone)
         val sendes = omTreUkerFornuftigDagtid(maxOf(nå, this.tom?.plusDays(1)?.atStartOfDay(osloZone) ?: nå))
 
-        val planlagtVarsel = PlanlagtVarsel(
-            id = null,
-            sykepengesoknadId = id,
-            brukerFnr = fnr,
-            oppdatert = Instant.now(),
-            orgnummer = arbeidsgiver!!.orgnummer!!,
-            sendes = sendes.toInstant(),
-            status = PLANLAGT,
-            varselType = when (this.type) {
-                SoknadstypeDTO.ARBEIDSTAKERE,
-                SoknadstypeDTO.BEHANDLINGSDAGER -> PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD
-                SoknadstypeDTO.GRADERT_REISETILSKUDD -> PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD_MED_REISETILSKUDD
-                else -> throw RuntimeException("Har ikke satt opp altinnvarsel for søknadtype ${this.type}")
-            },
-            soknadTom = tom!!,
-            soknadFom = fom!!
-        )
+        val planlagtVarsel =
+            PlanlagtVarsel(
+                id = null,
+                sykepengesoknadId = id,
+                brukerFnr = fnr,
+                oppdatert = Instant.now(),
+                orgnummer = arbeidsgiver!!.orgnummer!!,
+                sendes = sendes.toInstant(),
+                status = PLANLAGT,
+                varselType =
+                    when (this.type) {
+                        SoknadstypeDTO.ARBEIDSTAKERE,
+                        SoknadstypeDTO.BEHANDLINGSDAGER,
+                        -> PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD
+                        SoknadstypeDTO.GRADERT_REISETILSKUDD -> PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD_MED_REISETILSKUDD
+                        else -> throw RuntimeException("Har ikke satt opp altinnvarsel for søknadtype ${this.type}")
+                    },
+                soknadTom = tom!!,
+                soknadFom = fom!!,
+            )
         planlagtVarselRepository.save(planlagtVarsel)
         log.info("Planlegger varsel ${planlagtVarsel.varselType} for soknad $id som sendes ${planlagtVarsel.sendes}")
     }
 }
 
 fun nærmesteFornuftigDagtid(now: ZonedDateTime = ZonedDateTime.now(osloZone)): ZonedDateTime {
-    val dagtid = if (now.hour < 15) {
-        now.withHour(now.hour.coerceAtLeast(9))
-    } else {
-        now.plusDays(1).withHour(9)
-    }
+    val dagtid =
+        if (now.hour < 15) {
+            now.withHour(now.hour.coerceAtLeast(9))
+        } else {
+            now.plusDays(1).withHour(9)
+        }
     if (dagtid.dayOfWeek == DayOfWeek.SATURDAY) {
         return dagtid.withHour(9).plusDays(2)
     }
@@ -100,7 +103,6 @@ fun omTreUkerFornuftigDagtid(now: ZonedDateTime = ZonedDateTime.now(osloZone)): 
     return nærmesteFornuftigDagtid(now.plusWeeks(3))
 }
 
-fun SykepengesoknadDTO.skalSendeVarselTilArbeidsgiver() =
-    ARBEIDSTAKER == arbeidssituasjon && type != REISETILSKUDD
+fun SykepengesoknadDTO.skalSendeVarselTilArbeidsgiver() = ARBEIDSTAKER == arbeidssituasjon && type != REISETILSKUDD
 
 val osloZone = ZoneId.of("Europe/Oslo")

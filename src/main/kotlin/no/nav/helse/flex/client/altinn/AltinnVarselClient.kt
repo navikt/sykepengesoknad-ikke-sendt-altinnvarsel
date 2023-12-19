@@ -13,19 +13,20 @@ class AltinnVarselClient(
     private val altinnVarselMapper: AltinnVarselMapper,
     private val iCorrespondenceAgencyExternalBasic: ICorrespondenceAgencyExternalBasic,
     @param:Value("\${altinn.username}") private val username: String,
-    @param:Value("\${altinn.password}") private val password: String
+    @param:Value("\${altinn.password}") private val password: String,
 ) {
     val log = logger()
 
     fun sendManglendeInnsendingAvSoknadMeldingTilArbeidsgiver(altinnVarsel: AltinnVarsel): ReceiptExternal {
         try {
-            val receiptExternal = iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(
-                username,
-                password,
-                SYSTEM_USER_CODE,
-                altinnVarsel.planlagtVarsel.sykepengesoknadId,
-                altinnVarselMapper.mapAltinnVarselTilInsertCorrespondence(altinnVarsel)
-            )
+            val receiptExternal =
+                iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(
+                    username,
+                    password,
+                    SYSTEM_USER_CODE,
+                    altinnVarsel.planlagtVarsel.sykepengesoknadId,
+                    altinnVarselMapper.mapAltinnVarselTilInsertCorrespondence(altinnVarsel),
+                )
             if (receiptExternal.receiptStatusCode != ReceiptStatusEnum.OK) {
                 log.error("Fikk uventet statuskode fra Altinn {}", receiptExternal.receiptStatusCode)
                 throw RuntimeException("Feil ved sending varsel om manglende innsending av sykepengesøknad til Altinn")
