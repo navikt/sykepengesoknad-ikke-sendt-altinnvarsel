@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:max-line-length")
+
 package no.nav.helse.flex.client.altinn
 
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.ExternalContentV2
@@ -14,16 +16,20 @@ import javax.xml.namespace.QName
 
 @Component
 class AltinnVarselMapper(
-    @Value("\${overstyr.orgnr:nei}") private val overstyrOrgnr: String
+    @Value("\${overstyr.orgnr:nei}") private val overstyrOrgnr: String,
 ) {
     val log = logger()
 
     fun mapAltinnVarselTilInsertCorrespondence(altinnVarsel: AltinnVarsel): InsertCorrespondenceV2 {
         val namespace = "http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10"
-        val varsel = when (altinnVarsel.planlagtVarsel.varselType) {
-            PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD -> arbeidstakerSykepengesoknadAltinnVarsel(altinnVarsel)
-            PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD_MED_REISETILSKUDD -> arbeidstakerGradertReisetilskuddAltinnVarsel(altinnVarsel)
-        }
+        val varsel =
+            when (altinnVarsel.planlagtVarsel.varselType) {
+                PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD -> arbeidstakerSykepengesoknadAltinnVarsel(altinnVarsel)
+                PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD_MED_REISETILSKUDD ->
+                    arbeidstakerGradertReisetilskuddAltinnVarsel(
+                        altinnVarsel,
+                    )
+            }
 
         return InsertCorrespondenceV2()
             .withAllowForwarding(JAXBElement(QName(namespace, "AllowForwarding"), Boolean::class.java, false))
@@ -31,29 +37,29 @@ class AltinnVarselMapper(
                 JAXBElement(
                     QName(namespace, "Reportee"),
                     String::class.java,
-                    getOrgnummerForSendingTilAltinn(altinnVarsel.planlagtVarsel.orgnummer)
-                )
+                    getOrgnummerForSendingTilAltinn(altinnVarsel.planlagtVarsel.orgnummer),
+                ),
             )
             .withMessageSender(
                 JAXBElement(
                     QName(namespace, "MessageSender"),
                     String::class.java,
-                    "NAV (Arbeids- og velferdsetaten)"
-                )
+                    "NAV (Arbeids- og velferdsetaten)",
+                ),
             )
             .withServiceCode(
                 JAXBElement(
                     QName(namespace, "ServiceCode"),
                     String::class.java,
-                    SYKEPENGESOEKNAD_TJENESTEKODE
-                )
+                    SYKEPENGESOEKNAD_TJENESTEKODE,
+                ),
             )
             .withServiceEdition(
                 JAXBElement(
                     QName(namespace, "ServiceEdition"),
                     String::class.java,
-                    SYKEPENGESOEKNAD_TJENESTEVERSJON
-                )
+                    SYKEPENGESOEKNAD_TJENESTEVERSJON,
+                ),
             )
             .withNotifications(
                 JAXBElement(
@@ -62,9 +68,9 @@ class AltinnVarselMapper(
                     NotificationBEList()
                         .withNotification(
                             varsel.epost,
-                            varsel.sms
-                        )
-                )
+                            varsel.sms,
+                        ),
+                ),
             )
             .withContent(
                 JAXBElement(
@@ -73,8 +79,8 @@ class AltinnVarselMapper(
                     ExternalContentV2()
                         .withLanguageCode(JAXBElement(QName(namespace, "LanguageCode"), String::class.java, "1044"))
                         .withMessageTitle(JAXBElement(QName(namespace, "MessageTitle"), String::class.java, varsel.tittel))
-                        .withMessageBody(JAXBElement(QName(namespace, "MessageBody"), String::class.java, varsel.innhold))
-                )
+                        .withMessageBody(JAXBElement(QName(namespace, "MessageBody"), String::class.java, varsel.innhold)),
+                ),
             )
     }
 
@@ -99,14 +105,13 @@ class AltinnVarselMapper(
         val tittel: String,
         val innhold: String,
         val epost: Notification,
-        val sms: Notification
+        val sms: Notification,
     )
 
-    private fun arbeidstakerSykepengesoknadAltinnVarsel(
-        altinnVarsel: AltinnVarsel
-    ) = VarselInnhold(
-        tittel = "Manglende søknad om sykepenger - " + altinnVarsel.navnSykmeldt + " (" + altinnVarsel.planlagtVarsel.brukerFnr + ")",
-        innhold = """<html>
+    private fun arbeidstakerSykepengesoknadAltinnVarsel(altinnVarsel: AltinnVarsel) =
+        VarselInnhold(
+            tittel = "Manglende søknad om sykepenger - " + altinnVarsel.navnSykmeldt + " (" + altinnVarsel.planlagtVarsel.brukerFnr + ")",
+            innhold = """<html>
    <head>
        <meta charset="UTF-8">
    </head>
@@ -115,35 +120,36 @@ class AltinnVarselMapper(
            <h2>Søknad om sykepenger</h2>
            <p>${altinnVarsel.navnSykmeldt} (${altinnVarsel.planlagtVarsel.brukerFnr}) har fått en søknad om sykepenger til utfylling, men har foreløpig ikke sendt den inn.</p>
            <p>Perioden søknaden gjelder for er ${formatter.format(altinnVarsel.planlagtVarsel.soknadFom)}-${
-        formatter.format(
-            altinnVarsel.planlagtVarsel.soknadTom
-        )
-        }</p>
+                formatter.format(
+                    altinnVarsel.planlagtVarsel.soknadTom,
+                )
+            }</p>
            <h4>Om denne meldingen:</h4>
            <p>Denne meldingen er automatisk generert og skal hjelpe arbeidsgivere med å få oversikt over sykepengesøknader som mangler. NAV påtar seg ikke ansvar for eventuell manglende påminnelse. Vi garanterer heller ikke for at foreldelsesfristen ikke er passert, eller om det er andre grunner til at retten til sykepenger ikke er oppfylt. Dersom arbeidstakeren har åpnet en søknad og avbrutt den, vil det ikke bli sendt melding til dere.</p>
        </div>
    </body>
 </html>""",
-        epost = NotificationAltinnGenerator.opprettEpostNotification(
-            "Sykepengesøknad som ikke er sendt inn",
-            "<p>En ansatt i \$reporteeName$ (\$reporteeNumber$) har fått en søknad om sykepenger til utfylling, men har foreløpig ikke sendt den inn.</p>" +
-                "<p>Logg inn på <a href=\"" + NotificationAltinnGenerator.lenkeAltinnPortal() + "\">Altinn</a> for å se hvem det gjelder og hvilken periode søknaden gjelder for.</p>" +
-                "<p>Mer informasjon om digital sykmelding og sykepengesøknad finner du på www.nav.no/digitalsykmelding.</p>" +
-                "<p>Vennlig hilsen NAV</p>"
-        ),
-        sms = NotificationAltinnGenerator.opprettSMSNotification(
-            "En ansatt i \$reporteeName$ (\$reporteeNumber$) har fått en søknad om sykepenger til utfylling, men har foreløpig ikke sendt den inn.",
-            """Gå til meldingsboksen i ${NotificationAltinnGenerator.smsLenkeAltinnPortal()} for å se hvem det gjelder og hvilken periode søknaden gjelder for. 
+            epost =
+                NotificationAltinnGenerator.opprettEpostNotification(
+                    "Sykepengesøknad som ikke er sendt inn",
+                    "<p>En ansatt i \$reporteeName$ (\$reporteeNumber$) har fått en søknad om sykepenger til utfylling, men har foreløpig ikke sendt den inn.</p>" +
+                        "<p>Logg inn på <a href=\"" + NotificationAltinnGenerator.lenkeAltinnPortal() + "\">Altinn</a> for å se hvem det gjelder og hvilken periode søknaden gjelder for.</p>" +
+                        "<p>Mer informasjon om digital sykmelding og sykepengesøknad finner du på www.nav.no/digitalsykmelding.</p>" +
+                        "<p>Vennlig hilsen NAV</p>",
+                ),
+            sms =
+                NotificationAltinnGenerator.opprettSMSNotification(
+                    "En ansatt i \$reporteeName$ (\$reporteeNumber$) har fått en søknad om sykepenger til utfylling, men har foreløpig ikke sendt den inn.",
+                    """Gå til meldingsboksen i ${NotificationAltinnGenerator.smsLenkeAltinnPortal()} for å se hvem det gjelder og hvilken periode søknaden gjelder for. 
 
-Vennlig hilsen NAV"""
+Vennlig hilsen NAV""",
+                ),
         )
-    )
 
-    private fun arbeidstakerGradertReisetilskuddAltinnVarsel(
-        altinnVarsel: AltinnVarsel
-    ) = VarselInnhold(
-        tittel = "Manglende søknad om sykepenger med reisetilskudd - " + altinnVarsel.navnSykmeldt + " (" + altinnVarsel.planlagtVarsel.brukerFnr + ")",
-        innhold = """<html>
+    private fun arbeidstakerGradertReisetilskuddAltinnVarsel(altinnVarsel: AltinnVarsel) =
+        VarselInnhold(
+            tittel = "Manglende søknad om sykepenger med reisetilskudd - " + altinnVarsel.navnSykmeldt + " (" + altinnVarsel.planlagtVarsel.brukerFnr + ")",
+            innhold = """<html>
    <head>
        <meta charset="UTF-8">
    </head>
@@ -152,27 +158,29 @@ Vennlig hilsen NAV"""
            <h2>Søknad om sykepenger med reisetilskudd</h2>
            <p>${altinnVarsel.navnSykmeldt} (${altinnVarsel.planlagtVarsel.brukerFnr}) har fått en søknad om sykepenger med reisetilskudd til utfylling, men har foreløpig ikke sendt den inn.</p>
            <p>Perioden søknaden gjelder for er ${formatter.format(altinnVarsel.planlagtVarsel.soknadFom)}-${
-        formatter.format(
-            altinnVarsel.planlagtVarsel.soknadTom
-        )
-        }</p>
+                formatter.format(
+                    altinnVarsel.planlagtVarsel.soknadTom,
+                )
+            }</p>
            <h4>Om denne meldingen:</h4>
            <p>Denne meldingen er automatisk generert og skal hjelpe arbeidsgivere med å få oversikt over sykepengesøknader som mangler. NAV påtar seg ikke ansvar for eventuell manglende påminnelse. Vi garanterer heller ikke for at foreldelsesfristen ikke er passert, eller om det er andre grunner til at retten til sykepenger ikke er oppfylt. Dersom arbeidstakeren har åpnet en søknad og avbrutt den, vil det ikke bli sendt melding til dere.</p>
        </div>
    </body>
 </html>""",
-        epost = NotificationAltinnGenerator.opprettEpostNotification(
-            "Søknad om sykepenger med reisetilskudd som ikke er sendt inn",
-            "<p>En ansatt i \$reporteeName$ (\$reporteeNumber$) har fått en søknad om sykepenger med reisetilskudd til utfylling, men har foreløpig ikke sendt den inn.</p>" +
-                "<p>Logg inn på <a href=\"" + NotificationAltinnGenerator.lenkeAltinnPortal() + "\">Altinn</a> for å se hvem det gjelder og hvilken periode søknaden gjelder for.</p>" +
-                "<p>Mer informasjon om digital sykmelding og sykepengesøknad finner du på www.nav.no/digitalsykmelding.</p>" +
-                "<p>Vennlig hilsen NAV</p>"
-        ),
-        sms = NotificationAltinnGenerator.opprettSMSNotification(
-            "En ansatt i \$reporteeName$ (\$reporteeNumber$) har fått en søknad om sykepenger med reisetilskudd til utfylling, men har foreløpig ikke sendt den inn.",
-            """Gå til meldingsboksen i ${NotificationAltinnGenerator.smsLenkeAltinnPortal()} for å se hvem det gjelder og hvilken periode søknaden gjelder for. 
+            epost =
+                NotificationAltinnGenerator.opprettEpostNotification(
+                    "Søknad om sykepenger med reisetilskudd som ikke er sendt inn",
+                    "<p>En ansatt i \$reporteeName$ (\$reporteeNumber$) har fått en søknad om sykepenger med reisetilskudd til utfylling, men har foreløpig ikke sendt den inn.</p>" +
+                        "<p>Logg inn på <a href=\"" + NotificationAltinnGenerator.lenkeAltinnPortal() + "\">Altinn</a> for å se hvem det gjelder og hvilken periode søknaden gjelder for.</p>" +
+                        "<p>Mer informasjon om digital sykmelding og sykepengesøknad finner du på www.nav.no/digitalsykmelding.</p>" +
+                        "<p>Vennlig hilsen NAV</p>",
+                ),
+            sms =
+                NotificationAltinnGenerator.opprettSMSNotification(
+                    "En ansatt i \$reporteeName$ (\$reporteeNumber$) har fått en søknad om sykepenger med reisetilskudd til utfylling, men har foreløpig ikke sendt den inn.",
+                    """Gå til meldingsboksen i ${NotificationAltinnGenerator.smsLenkeAltinnPortal()} for å se hvem det gjelder og hvilken periode søknaden gjelder for. 
 
-Vennlig hilsen NAV"""
+Vennlig hilsen NAV""",
+                ),
         )
-    )
 }

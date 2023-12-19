@@ -21,18 +21,18 @@ import java.util.concurrent.TimeUnit.SECONDS
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class VarselTest : Testoppsett() {
-
     val orgnummer = "999111555"
-    val soknad = SykepengesoknadDTO(
-        fnr = fnr,
-        id = UUID.randomUUID().toString(),
-        type = SoknadstypeDTO.ARBEIDSTAKERE,
-        status = SoknadsstatusDTO.NY,
-        fom = LocalDate.now().minusDays(1),
-        tom = LocalDate.now(),
-        arbeidssituasjon = ArbeidssituasjonDTO.ARBEIDSTAKER,
-        arbeidsgiver = ArbeidsgiverDTO(navn = "Bedriften AS", orgnummer = orgnummer)
-    )
+    val soknad =
+        SykepengesoknadDTO(
+            fnr = fnr,
+            id = UUID.randomUUID().toString(),
+            type = SoknadstypeDTO.ARBEIDSTAKERE,
+            status = SoknadsstatusDTO.NY,
+            fom = LocalDate.now().minusDays(1),
+            tom = LocalDate.now(),
+            arbeidssituasjon = ArbeidssituasjonDTO.ARBEIDSTAKER,
+            arbeidsgiver = ArbeidsgiverDTO(navn = "Bedriften AS", orgnummer = orgnummer),
+        )
 
     @Autowired
     lateinit var varselUtsendelse: VarselUtsendelse
@@ -42,20 +42,22 @@ class VarselTest : Testoppsett() {
     fun `Arbeidsledig, frilanser og sånt skaper ikke planlagt varsel`() {
         planlagtVarselRepository.findAll().iterator().asSequence().toList().isEmpty()
 
-        val arbeidsledig = SykepengesoknadDTO(
-            fnr = fnr,
-            id = UUID.randomUUID().toString(),
-            type = SoknadstypeDTO.ARBEIDSLEDIG,
-            status = SoknadsstatusDTO.NY,
-            arbeidssituasjon = ArbeidssituasjonDTO.ARBEIDSLEDIG
-        )
-        val frilanser = SykepengesoknadDTO(
-            fnr = fnr,
-            id = UUID.randomUUID().toString(),
-            type = SoknadstypeDTO.SELVSTENDIGE_OG_FRILANSERE,
-            status = SoknadsstatusDTO.NY,
-            arbeidssituasjon = ArbeidssituasjonDTO.FRILANSER
-        )
+        val arbeidsledig =
+            SykepengesoknadDTO(
+                fnr = fnr,
+                id = UUID.randomUUID().toString(),
+                type = SoknadstypeDTO.ARBEIDSLEDIG,
+                status = SoknadsstatusDTO.NY,
+                arbeidssituasjon = ArbeidssituasjonDTO.ARBEIDSLEDIG,
+            )
+        val frilanser =
+            SykepengesoknadDTO(
+                fnr = fnr,
+                id = UUID.randomUUID().toString(),
+                type = SoknadstypeDTO.SELVSTENDIGE_OG_FRILANSERE,
+                status = SoknadsstatusDTO.NY,
+                arbeidssituasjon = ArbeidssituasjonDTO.FRILANSER,
+            )
 
         sendSykepengesoknad(arbeidsledig)
         sendSykepengesoknad(frilanser)
@@ -143,14 +145,18 @@ class VarselTest : Testoppsett() {
         val soknaden = soknad.copy(id = UUID.randomUUID().toString())
         sendSykepengesoknad(soknaden)
 
-        val narmesteLederLeesah = getNarmesteLederLeesah(
-            narmesteLederId = UUID.randomUUID(),
-            arbeidsgiverForskutterer = true,
-            fnr = soknaden.fnr,
-            orgnummer = soknaden.arbeidsgiver!!.orgnummer!!
-        )
+        val narmesteLederLeesah =
+            getNarmesteLederLeesah(
+                narmesteLederId = UUID.randomUUID(),
+                arbeidsgiverForskutterer = true,
+                fnr = soknaden.fnr,
+                orgnummer = soknaden.arbeidsgiver!!.orgnummer!!,
+            )
 
-        narmesteLederRepository.finnForskuttering(narmesteLederLeesah.fnr, narmesteLederLeesah.orgnummer)?.arbeidsgiverForskutterer.shouldBeNull()
+        narmesteLederRepository.finnForskuttering(
+            narmesteLederLeesah.fnr,
+            narmesteLederLeesah.orgnummer,
+        )?.arbeidsgiverForskutterer.shouldBeNull()
 
         sendNarmesteLederLeesah(narmesteLederLeesah)
 

@@ -20,7 +20,6 @@ import javax.xml.stream.XMLInputFactory
 import javax.xml.stream.XMLStreamReader
 
 class AltinnClientTest : Testoppsett() {
-
     @Autowired
     lateinit var altinnVarselClient: AltinnVarselClient
 
@@ -28,21 +27,23 @@ class AltinnClientTest : Testoppsett() {
     fun `test webservice kall til altinn`() {
         mockAltinnResponse()
 
-        val altinnVarsel = AltinnVarsel(
-            navnSykmeldt = "Max Mekker",
-            planlagtVarsel = PlanlagtVarsel(
-                brukerFnr = "123123",
-                orgnummer = "234234",
-                sykepengesoknadId = UUID.randomUUID().toString(),
-                soknadFom = LocalDate.now(),
-                soknadTom = LocalDate.now(),
-                varselType = PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD,
-                id = null,
-                oppdatert = Instant.now(),
-                sendes = Instant.now(),
-                status = PlanlagtVarselStatus.PLANLAGT
+        val altinnVarsel =
+            AltinnVarsel(
+                navnSykmeldt = "Max Mekker",
+                planlagtVarsel =
+                    PlanlagtVarsel(
+                        brukerFnr = "123123",
+                        orgnummer = "234234",
+                        sykepengesoknadId = UUID.randomUUID().toString(),
+                        soknadFom = LocalDate.now(),
+                        soknadTom = LocalDate.now(),
+                        varselType = PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD,
+                        id = null,
+                        oppdatert = Instant.now(),
+                        sendes = Instant.now(),
+                        status = PlanlagtVarselStatus.PLANLAGT,
+                    ),
             )
-        )
 
         altinnVarselClient.sendManglendeInnsendingAvSoknadMeldingTilArbeidsgiver(altinnVarsel)
 
@@ -50,7 +51,8 @@ class AltinnClientTest : Testoppsett() {
 
         val insertCorrespondenceBasicV2 = soapRequest.parseCorrespondence()
         insertCorrespondenceBasicV2.systemUserCode `should be equal to` "NAV_DIGISYFO"
-        insertCorrespondenceBasicV2.correspondence.content.value.messageTitle.value `should be equal to` "Manglende søknad om sykepenger - Max Mekker (123123)"
+        insertCorrespondenceBasicV2.correspondence.content.value.messageTitle.value `should be equal to`
+            "Manglende søknad om sykepenger - Max Mekker (123123)"
         insertCorrespondenceBasicV2.correspondence.reportee.value `should be equal to` "234234"
         soapRequest.path `should be equal to` "/ServiceEngineExternal/CorrespondenceAgencyExternalBasic.svc"
         soapRequest.method `should be equal to` "POST"

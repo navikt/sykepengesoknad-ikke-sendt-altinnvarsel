@@ -18,5 +18,5 @@ data class NarmesteLeder(
     val narmesteLederEpost: String,
     val aktivFom: LocalDate,
     val aktivTom: LocalDate?,
-    val arbeidsgiverForskutterer: Boolean?
+    val arbeidsgiverForskutterer: Boolean?,
 )

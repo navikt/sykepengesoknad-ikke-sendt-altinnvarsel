@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:max-line-length")
+
 package no.nav.helse.flex.client.pdl
 
 import no.nav.helse.flex.Testoppsett
@@ -8,7 +10,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 class PdlClientTest : Testoppsett() {
-
     @Autowired
     private lateinit var pdlClient: PdlClient
 
