@@ -29,7 +29,7 @@ repositories {
 val sykepengesoknadKafkaVersion = "2024.01.11-14.12-7adc3f4a"
 val logstashLogbackEncoderVersion = "7.4"
 val tjenestespesifikasjonerVersion = "2610.9b6de22"
-val testContainersVersion = "1.19.3"
+val testContainersVersion = "1.19.4"
 val kluentVersion = "1.73"
 val tokenSupportVersion = "3.2.0"
 val smCommonVersion = "1.1e5e122"
