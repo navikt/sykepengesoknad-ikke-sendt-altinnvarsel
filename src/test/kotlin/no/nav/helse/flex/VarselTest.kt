@@ -20,7 +20,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit.SECONDS
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class VarselTest : Testoppsett() {
+class VarselTest : FellesTestOppsett() {
     val orgnummer = "999111555"
     val soknad =
         SykepengesoknadDTO(

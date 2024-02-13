@@ -14,5 +14,5 @@ fun mockAltinnResponse() {
         </soap:Body>
     </soap:Envelope>"""
 
-    Testoppsett.altinnMockWebserver.enqueue(MockResponse().setBody(response))
+    FellesTestOppsett.altinnMockWebserver.enqueue(MockResponse().setBody(response))
 }

@@ -14,7 +14,7 @@ import java.time.LocalDate
 import java.util.*
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class ForskutteringTest : Testoppsett() {
+class ForskutteringTest : FellesTestOppsett() {
     final val record1 =
         getNarmesteLederLeesah(
             aktivTom = null,
