@@ -1,6 +1,6 @@
 package no.nav.helse.flex
 
-import no.nav.helse.flex.Testoppsett.Companion.pdlMockWebserver
+import no.nav.helse.flex.FellesTestOppsett.Companion.pdlMockWebserver
 import no.nav.helse.flex.client.pdl.HentNavn
 import no.nav.helse.flex.client.pdl.HentNavnResponse
 import no.nav.helse.flex.client.pdl.HentNavnResponseData

@@ -19,7 +19,7 @@ import javax.xml.bind.JAXBElement
 import javax.xml.stream.XMLInputFactory
 import javax.xml.stream.XMLStreamReader
 
-class AltinnClientTest : Testoppsett() {
+class AltinnClientTest : FellesTestOppsett() {
     @Autowired
     lateinit var altinnVarselClient: AltinnVarselClient
 
