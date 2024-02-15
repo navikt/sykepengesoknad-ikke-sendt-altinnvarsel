@@ -25,7 +25,7 @@ repositories {
     }
 }
 
-val sykepengesoknadKafkaVersion = "2024.01.31-08.02-ce296b0f"
+val sykepengesoknadKafkaVersion = "2024.02.14-18.01-3523e4c2"
 val logstashLogbackEncoderVersion = "7.4"
 val tjenestespesifikasjonerVersion = "2610.9b6de22"
 val testContainersVersion = "1.19.3"
