@@ -34,7 +34,7 @@ spec:
       memory: {{memory}}
   gcp:
     sqlInstances:
-      - type: POSTGRES_12
+      - type: {{db_type}}
         tier: {{db_tier}}
         diskAutoresize: true
         databases:
