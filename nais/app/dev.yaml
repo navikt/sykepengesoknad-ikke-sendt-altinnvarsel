@@ -3,7 +3,6 @@ namespace: flex
 team: flex
 kafkaPool: nav-dev
 db_tier: db-f1-micro
-db_type: POSTGRES_12
 cpu: 100m
 memory: 1024Mi
 external-host:
