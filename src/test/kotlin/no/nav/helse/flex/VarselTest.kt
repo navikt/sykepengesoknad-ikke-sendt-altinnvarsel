@@ -88,7 +88,7 @@ class VarselTest : FellesTestOppsett() {
         planlagtVarsel.status `should be equal to` PLANLAGT
         planlagtVarsel.soknadFom `should be equal to` LocalDate.now().minusDays(1)
         planlagtVarsel.soknadTom `should be equal to` LocalDate.now()
-        planlagtVarsel.sendes.shouldBeBefore(OffsetDateTime.now().plusDays(24).toInstant())
+        planlagtVarsel.sendes.shouldBeBefore(OffsetDateTime.now().plusDays(25).toInstant())
         planlagtVarsel.sendes.shouldBeAfter(OffsetDateTime.now().plusDays(20).toInstant())
 
         planlagteVarslerSomSendesFør(dager = 25).size `should be equal to` 1
@@ -172,8 +172,8 @@ class VarselTest : FellesTestOppsett() {
         mockPdlResponse()
         mockAltinnResponse()
 
-        varselUtsendelse.sendVarsler(OffsetDateTime.now().plusDays(25).toInstant()) `should be equal to` 1
-        varselUtsendelse.sendVarsler(OffsetDateTime.now().plusDays(25).toInstant()) `should be equal to` 0
+        varselUtsendelse.sendVarsler(OffsetDateTime.now().plusDays(26).toInstant()) `should be equal to` 1
+        varselUtsendelse.sendVarsler(OffsetDateTime.now().plusDays(26).toInstant()) `should be equal to` 0
 
         planlagtVarselRepository.findBySykepengesoknadId(soknaden.id).first().status `should be` PlanlagtVarselStatus.SENDT
         planlagteVarslerSomSendesFør(dager = 25).size `should be equal to` 0
