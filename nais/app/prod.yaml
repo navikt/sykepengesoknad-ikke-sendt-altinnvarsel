@@ -4,7 +4,7 @@ team: flex
 kafkaPool: nav-prod
 db_tier: db-custom-1-3840
 cpu: 200m
-memory: 1024Mi
+memory: 768Mi
 external-host:
   - pdl-api.prod-fss-pub.nais.io
   - www.altinn.no
