@@ -3,7 +3,7 @@ namespace: flex
 team: flex
 kafkaPool: nav-dev
 db_tier: db-f1-micro
-cpu: 100m
+cpu: 50m
 memory: 512Mi
 external-host:
   - pdl-api.dev-fss-pub.nais.io
