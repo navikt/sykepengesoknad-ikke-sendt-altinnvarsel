@@ -23,10 +23,12 @@ class OppdaterNarmesteLederTest : FellesTestOppsett() {
 
         val narmesteLederLeesah = getNarmesteLederLeesah(narmesteLederId)
 
-        narmesteLederRepository.finnForskuttering(
-            narmesteLederLeesah.fnr,
-            narmesteLederLeesah.orgnummer,
-        )?.arbeidsgiverForskutterer.shouldBeNull()
+        narmesteLederRepository
+            .finnForskuttering(
+                narmesteLederLeesah.fnr,
+                narmesteLederLeesah.orgnummer,
+            )?.arbeidsgiverForskutterer
+            .shouldBeNull()
 
         sendNarmesteLederLeesah(narmesteLederLeesah)
 
@@ -39,10 +41,12 @@ class OppdaterNarmesteLederTest : FellesTestOppsett() {
         narmesteLeder.narmesteLederEpost `should be equal to` narmesteLederLeesah.narmesteLederEpost
         narmesteLeder.aktivTom.shouldBeNull()
 
-        narmesteLederRepository.finnForskuttering(
-            narmesteLederLeesah.fnr,
-            narmesteLederLeesah.orgnummer,
-        )?.arbeidsgiverForskutterer!!.shouldBeTrue()
+        narmesteLederRepository
+            .finnForskuttering(
+                narmesteLederLeesah.fnr,
+                narmesteLederLeesah.orgnummer,
+            )?.arbeidsgiverForskutterer!!
+            .shouldBeTrue()
     }
 
     @Test
@@ -50,10 +54,12 @@ class OppdaterNarmesteLederTest : FellesTestOppsett() {
         narmesteLederRepository.deleteAll()
         val narmesteLederId = UUID.randomUUID()
         val narmesteLederLeesah = getNarmesteLederLeesah(narmesteLederId)
-        narmesteLederRepository.finnForskuttering(
-            narmesteLederLeesah.fnr,
-            narmesteLederLeesah.orgnummer,
-        )?.arbeidsgiverForskutterer.shouldBeNull()
+        narmesteLederRepository
+            .finnForskuttering(
+                narmesteLederLeesah.fnr,
+                narmesteLederLeesah.orgnummer,
+            )?.arbeidsgiverForskutterer
+            .shouldBeNull()
 
         sendNarmesteLederLeesah(narmesteLederLeesah)
         await().atMost(10, TimeUnit.SECONDS).until {
@@ -63,10 +69,12 @@ class OppdaterNarmesteLederTest : FellesTestOppsett() {
         val narmesteLeder = narmesteLederRepository.findByNarmesteLederId(narmesteLederId)!!
         narmesteLeder.narmesteLederTelefonnummer `should be equal to` "90909090"
         narmesteLeder.narmesteLederEpost `should be equal to` "test@nav.no"
-        narmesteLederRepository.finnForskuttering(
-            narmesteLederLeesah.fnr,
-            narmesteLederLeesah.orgnummer,
-        )?.arbeidsgiverForskutterer!!.shouldBeTrue()
+        narmesteLederRepository
+            .finnForskuttering(
+                narmesteLederLeesah.fnr,
+                narmesteLederLeesah.orgnummer,
+            )?.arbeidsgiverForskutterer!!
+            .shouldBeTrue()
 
         sendNarmesteLederLeesah(
             getNarmesteLederLeesah(
@@ -82,10 +90,12 @@ class OppdaterNarmesteLederTest : FellesTestOppsett() {
             narmesteLederRepository.findByNarmesteLederId(narmesteLederId)!!.narmesteLederEpost == "mail@banken.no"
         }
 
-        narmesteLederRepository.finnForskuttering(
-            narmesteLederLeesah.fnr,
-            narmesteLederLeesah.orgnummer,
-        )?.arbeidsgiverForskutterer!!.shouldBeFalse()
+        narmesteLederRepository
+            .finnForskuttering(
+                narmesteLederLeesah.fnr,
+                narmesteLederLeesah.orgnummer,
+            )?.arbeidsgiverForskutterer!!
+            .shouldBeFalse()
 
         val oppdaterNl = narmesteLederRepository.findByNarmesteLederId(narmesteLederId)!!
         oppdaterNl.narmesteLederTelefonnummer `should be equal to` "98989898"

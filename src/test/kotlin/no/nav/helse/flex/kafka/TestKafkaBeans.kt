@@ -30,15 +30,14 @@ class TestKafkaBeans(
             ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest",
         ) + kafkaConfig.commonConfig()
 
-    private fun producerConfig(): Map<String, Serializable> {
-        return mapOf(
+    private fun producerConfig(): Map<String, Serializable> =
+        mapOf(
             ProducerConfig.ACKS_CONFIG to "all",
             ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG to "true",
             ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION to "1",
             ProducerConfig.MAX_BLOCK_MS_CONFIG to "15000",
             ProducerConfig.RETRIES_CONFIG to "100000",
         )
-    }
 
     fun testConsumerProps(groupId: String) =
         mapOf(

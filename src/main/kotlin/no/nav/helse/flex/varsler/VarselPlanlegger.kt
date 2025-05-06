@@ -33,7 +33,8 @@ class VarselPlanlegger(
     }
 
     private fun SykepengesoknadDTO.avbrytManglendeSoknadVarsler() {
-        planlagtVarselRepository.findBySykepengesoknadId(id)
+        planlagtVarselRepository
+            .findBySykepengesoknadId(id)
             .forEach {
                 if (it.status == PLANLAGT) {
                     log.info("Avbryter planlagt varsler med type $type for id $id")
@@ -99,9 +100,7 @@ fun nærmesteFornuftigDagtid(now: ZonedDateTime = ZonedDateTime.now(osloZone)): 
     return dagtid
 }
 
-fun omTreUkerFornuftigDagtid(now: ZonedDateTime = ZonedDateTime.now(osloZone)): ZonedDateTime {
-    return nærmesteFornuftigDagtid(now.plusWeeks(3))
-}
+fun omTreUkerFornuftigDagtid(now: ZonedDateTime = ZonedDateTime.now(osloZone)): ZonedDateTime = nærmesteFornuftigDagtid(now.plusWeeks(3))
 
 fun SykepengesoknadDTO.skalSendeVarselTilArbeidsgiver() = ARBEIDSTAKER == arbeidssituasjon && type != REISETILSKUDD
 

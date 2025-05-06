@@ -39,29 +39,25 @@ class AltinnVarselMapper(
                     String::class.java,
                     getOrgnummerForSendingTilAltinn(altinnVarsel.planlagtVarsel.orgnummer),
                 ),
-            )
-            .withMessageSender(
+            ).withMessageSender(
                 JAXBElement(
                     QName(namespace, "MessageSender"),
                     String::class.java,
                     "NAV (Arbeids- og velferdsetaten)",
                 ),
-            )
-            .withServiceCode(
+            ).withServiceCode(
                 JAXBElement(
                     QName(namespace, "ServiceCode"),
                     String::class.java,
                     SYKEPENGESOEKNAD_TJENESTEKODE,
                 ),
-            )
-            .withServiceEdition(
+            ).withServiceEdition(
                 JAXBElement(
                     QName(namespace, "ServiceEdition"),
                     String::class.java,
                     SYKEPENGESOEKNAD_TJENESTEVERSJON,
                 ),
-            )
-            .withNotifications(
+            ).withNotifications(
                 JAXBElement(
                     QName(namespace, "Notifications"),
                     NotificationBEList::class.java,
@@ -71,8 +67,7 @@ class AltinnVarselMapper(
                             varsel.sms,
                         ),
                 ),
-            )
-            .withContent(
+            ).withContent(
                 JAXBElement(
                     QName(namespace, "Content"),
                     ExternalContentV2::class.java,
@@ -84,15 +79,14 @@ class AltinnVarselMapper(
             )
     }
 
-    private fun getOrgnummerForSendingTilAltinn(orgnummer: String): String {
-        return if (overstyrOrgnr == "ja") {
+    private fun getOrgnummerForSendingTilAltinn(orgnummer: String): String =
+        if (overstyrOrgnr == "ja") {
             log.warn("Overstyrer orgnummer i altinninnsendelse til 910067494")
             // dette er default orgnummer i test: 'GODVIK OG FLATÅSEN'
             "910067494"
         } else {
             orgnummer
         }
-    }
 
     companion object {
         private const val SYKEPENGESOEKNAD_TJENESTEKODE =
@@ -133,7 +127,8 @@ class AltinnVarselMapper(
                 NotificationAltinnGenerator.opprettEpostNotification(
                     "Sykepengesøknad som ikke er sendt inn",
                     "<p>En ansatt i \$reporteeName$ (\$reporteeNumber$) har fått en søknad om sykepenger til utfylling, men har foreløpig ikke sendt den inn.</p>" +
-                        "<p>Logg inn på <a href=\"" + NotificationAltinnGenerator.lenkeAltinnPortal() + "\">Altinn</a> for å se hvem det gjelder og hvilken periode søknaden gjelder for.</p>" +
+                        "<p>Logg inn på <a href=\"" + NotificationAltinnGenerator.lenkeAltinnPortal() +
+                        "\">Altinn</a> for å se hvem det gjelder og hvilken periode søknaden gjelder for.</p>" +
                         "<p>Mer informasjon om digital sykmelding og sykepengesøknad finner du på www.nav.no/digitalsykmelding.</p>" +
                         "<p>Vennlig hilsen NAV</p>",
                 ),
@@ -148,7 +143,10 @@ Vennlig hilsen NAV""",
 
     private fun arbeidstakerGradertReisetilskuddAltinnVarsel(altinnVarsel: AltinnVarsel) =
         VarselInnhold(
-            tittel = "Manglende søknad om sykepenger med reisetilskudd - " + altinnVarsel.navnSykmeldt + " (" + altinnVarsel.planlagtVarsel.brukerFnr + ")",
+            tittel =
+                "Manglende søknad om sykepenger med reisetilskudd - " + altinnVarsel.navnSykmeldt + " (" +
+                    altinnVarsel.planlagtVarsel.brukerFnr +
+                    ")",
             innhold = """<html>
    <head>
        <meta charset="UTF-8">
@@ -171,7 +169,8 @@ Vennlig hilsen NAV""",
                 NotificationAltinnGenerator.opprettEpostNotification(
                     "Søknad om sykepenger med reisetilskudd som ikke er sendt inn",
                     "<p>En ansatt i \$reporteeName$ (\$reporteeNumber$) har fått en søknad om sykepenger med reisetilskudd til utfylling, men har foreløpig ikke sendt den inn.</p>" +
-                        "<p>Logg inn på <a href=\"" + NotificationAltinnGenerator.lenkeAltinnPortal() + "\">Altinn</a> for å se hvem det gjelder og hvilken periode søknaden gjelder for.</p>" +
+                        "<p>Logg inn på <a href=\"" + NotificationAltinnGenerator.lenkeAltinnPortal() +
+                        "\">Altinn</a> for å se hvem det gjelder og hvilken periode søknaden gjelder for.</p>" +
                         "<p>Mer informasjon om digital sykmelding og sykepengesøknad finner du på www.nav.no/digitalsykmelding.</p>" +
                         "<p>Vennlig hilsen NAV</p>",
                 ),

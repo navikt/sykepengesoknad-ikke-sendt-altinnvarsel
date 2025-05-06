@@ -17,33 +17,22 @@ internal object NotificationAltinnGenerator {
     private const val FRA_EPOST_ALTINN = "noreply@altinn.no"
     private const val NOTIFICATION_NAMESPACE = "http://schemas.altinn.no/services/ServiceEngine/Notification/2009/10"
 
-    private fun urlEncode(lenke: String): String {
-        return lenke.replace("=".toRegex(), "%3D")
-    }
+    private fun urlEncode(lenke: String): String = lenke.replace("=".toRegex(), "%3D")
 
-    fun smsLenkeAltinnPortal(): String {
-        return urlEncode(lenkeAltinnPortal())
-    }
+    fun smsLenkeAltinnPortal(): String = urlEncode(lenkeAltinnPortal())
 
-    fun lenkeAltinnPortal(): String {
-        return System.getProperty("altinn.portal.baseurl", "https://www.altinn.no") + "/ui/MessageBox?O=\$reporteeNumber$"
-    }
+    fun lenkeAltinnPortal(): String =
+        System.getProperty("altinn.portal.baseurl", "https://www.altinn.no") + "/ui/MessageBox?O=\$reporteeNumber$"
 
-    fun opprettEpostNotification(vararg text: String): Notification {
-        return opprettNotification(FRA_EPOST_ALTINN, TransportType.EMAIL, *text)
-    }
+    fun opprettEpostNotification(vararg text: String): Notification = opprettNotification(FRA_EPOST_ALTINN, TransportType.EMAIL, *text)
 
-    fun opprettSMSNotification(vararg text: String): Notification {
-        return opprettNotification(null, TransportType.SMS, *text)
-    }
+    fun opprettSMSNotification(vararg text: String): Notification = opprettNotification(null, TransportType.SMS, *text)
 
     private fun opprettNotification(
         fraEpost: String?,
         type: TransportType,
         vararg text: String,
-    ): Notification {
-        return opprettNotification(fraEpost, type, konverterTilTextTokens(*text))
-    }
+    ): Notification = opprettNotification(fraEpost, type, konverterTilTextTokens(*text))
 
     private fun opprettNotification(
         fraEpost: String?,
@@ -58,8 +47,7 @@ internal object NotificationAltinnGenerator {
                 mapNullable(
                     fraEpost,
                 ) { epost: String? -> JAXBElement(QName(NOTIFICATION_NAMESPACE, "FromAddress"), String::class.java, epost) },
-            )
-            .withReceiverEndPoints(
+            ).withReceiverEndPoints(
                 JAXBElement(
                     QName(NOTIFICATION_NAMESPACE, "ReceiverEndPoints"),
                     ReceiverEndPointBEList::class.java,
@@ -71,8 +59,7 @@ internal object NotificationAltinnGenerator {
                                 ),
                         ),
                 ),
-            )
-            .withTextTokens(
+            ).withTextTokens(
                 JAXBElement(
                     QName(NOTIFICATION_NAMESPACE, "TextTokens"),
                     TextTokenSubstitutionBEList::class.java,
@@ -96,7 +83,5 @@ internal object NotificationAltinnGenerator {
     private fun <T, R> mapNullable(
         fra: T,
         exp: Function<T, R>,
-    ): R {
-        return Optional.ofNullable(fra).map(exp).orElse(null)
-    }
+    ): R = Optional.ofNullable(fra).map(exp).orElse(null)
 }
