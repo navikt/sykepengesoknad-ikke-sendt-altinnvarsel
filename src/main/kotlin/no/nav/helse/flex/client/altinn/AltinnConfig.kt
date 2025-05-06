@@ -12,12 +12,11 @@ class AltinnConfig {
     @Primary
     fun iCorrespondenceAgencyExternalBasic(
         @Value("\${altinn.url}") altinnUrl: String,
-    ): ICorrespondenceAgencyExternalBasic {
-        return WsClient<ICorrespondenceAgencyExternalBasic>()
+    ): ICorrespondenceAgencyExternalBasic =
+        WsClient<ICorrespondenceAgencyExternalBasic>()
             .createPort(
                 serviceUrl = "$altinnUrl/ServiceEngineExternal/CorrespondenceAgencyExternalBasic.svc",
                 portType = ICorrespondenceAgencyExternalBasic::class.java,
                 handlers = listOf(LogErrorHandler()),
             )
-    }
 }

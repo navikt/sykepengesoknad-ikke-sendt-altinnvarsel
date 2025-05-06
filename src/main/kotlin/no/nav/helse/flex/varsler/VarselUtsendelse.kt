@@ -39,10 +39,11 @@ class VarselUtsendelse(
             }
 
             val forskuttering =
-                narmesteLederRepository.finnForskuttering(
-                    orgnummer = planlagtVarsel.orgnummer,
-                    brukerFnr = planlagtVarsel.brukerFnr,
-                )?.arbeidsgiverForskutterer
+                narmesteLederRepository
+                    .finnForskuttering(
+                        orgnummer = planlagtVarsel.orgnummer,
+                        brukerFnr = planlagtVarsel.brukerFnr,
+                    )?.arbeidsgiverForskutterer
             if (forskuttering != true) {
                 log.info(
                     "Sender ikke planlagt varsel ${planlagtVarsel.id} om manglende innsending av sykepengesøknad " +
@@ -83,14 +84,15 @@ class VarselUtsendelse(
         status: PlanlagtVarselStatus,
         type: PlanlagtVarselType,
     ) {
-        registry.counter(
-            "planlagt_varsel_behandlet",
-            Tags.of(
-                "status",
-                status.name,
-                "type",
-                type.name,
-            ),
-        ).increment()
+        registry
+            .counter(
+                "planlagt_varsel_behandlet",
+                Tags.of(
+                    "status",
+                    status.name,
+                    "type",
+                    type.name,
+                ),
+            ).increment()
     }
 }

@@ -12,13 +12,9 @@ import javax.xml.ws.handler.soap.SOAPHandler
 import javax.xml.ws.handler.soap.SOAPMessageContext
 
 class LogErrorHandler : SOAPHandler<SOAPMessageContext?> {
-    override fun getHeaders(): Set<QName> {
-        return emptySet()
-    }
+    override fun getHeaders(): Set<QName> = emptySet()
 
-    override fun handleMessage(context: SOAPMessageContext?): Boolean {
-        return true
-    }
+    override fun handleMessage(context: SOAPMessageContext?): Boolean = true
 
     override fun handleFault(context: SOAPMessageContext?): Boolean {
         if (context is SOAPMessageContextImpl) {

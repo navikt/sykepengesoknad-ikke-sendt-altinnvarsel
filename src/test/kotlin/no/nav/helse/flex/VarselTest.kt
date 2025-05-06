@@ -40,7 +40,12 @@ class VarselTest : FellesTestOppsett() {
     @Test
     @Order(0)
     fun `Arbeidsledig, frilanser og sånt skaper ikke planlagt varsel`() {
-        planlagtVarselRepository.findAll().iterator().asSequence().toList().isEmpty()
+        planlagtVarselRepository
+            .findAll()
+            .iterator()
+            .asSequence()
+            .toList()
+            .isEmpty()
 
         val arbeidsledig =
             SykepengesoknadDTO(
@@ -63,10 +68,20 @@ class VarselTest : FellesTestOppsett() {
         sendSykepengesoknad(frilanser)
 
         await().during(3, SECONDS).until {
-            planlagtVarselRepository.findAll().iterator().asSequence().toList().isEmpty()
+            planlagtVarselRepository
+                .findAll()
+                .iterator()
+                .asSequence()
+                .toList()
+                .isEmpty()
         }
 
-        planlagtVarselRepository.findAll().iterator().asSequence().toList().shouldBeEmpty()
+        planlagtVarselRepository
+            .findAll()
+            .iterator()
+            .asSequence()
+            .toList()
+            .shouldBeEmpty()
     }
 
     @Test
@@ -153,10 +168,12 @@ class VarselTest : FellesTestOppsett() {
                 orgnummer = soknaden.arbeidsgiver!!.orgnummer!!,
             )
 
-        narmesteLederRepository.finnForskuttering(
-            narmesteLederLeesah.fnr,
-            narmesteLederLeesah.orgnummer,
-        )?.arbeidsgiverForskutterer.shouldBeNull()
+        narmesteLederRepository
+            .finnForskuttering(
+                narmesteLederLeesah.fnr,
+                narmesteLederLeesah.orgnummer,
+            )?.arbeidsgiverForskutterer
+            .shouldBeNull()
 
         sendNarmesteLederLeesah(narmesteLederLeesah)
 
