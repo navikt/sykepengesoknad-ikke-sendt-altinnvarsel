@@ -4,7 +4,7 @@ team: flex
 kafkaPool: nav-dev
 db_tier: db-f1-micro
 cpu: 50m
-memory: 512Mi
+memory: 768Mi
 external-host:
   - pdl-api.dev-fss-pub.nais.io
   - tt02.altinn.no
