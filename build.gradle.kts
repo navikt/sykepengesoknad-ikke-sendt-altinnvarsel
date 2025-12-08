@@ -27,7 +27,7 @@ repositories {
 val sykepengesoknadKafkaVersion = "2025.11.18-06.24-f860ace9"
 val logstashLogbackEncoderVersion = "8.1"
 val tjenestespesifikasjonerVersion = "2643.2f3e8e9"
-val testContainersVersion = "1.21.3"
+val testContainersVersion = "2.0.2"
 val kluentVersion = "1.73"
 val tokenSupportVersion = "5.0.39"
 val smCommonVersion = "1.1e5e122"
@@ -73,10 +73,10 @@ dependencies {
     implementation("javax.xml.ws:jaxws-api:$jaxWsApiVersion")
     implementation("org.glassfish.jaxb:jaxb-runtime:$jaxbRuntimeVersion")
 
-    testImplementation(platform("org.testcontainers:testcontainers-bom:$testContainersVersion"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.testcontainers:postgresql")
-    testImplementation("org.testcontainers:kafka")
+    testImplementation("org.testcontainers:testcontainers:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers-postgresql:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers-kafka:$testContainersVersion")
     testImplementation("org.awaitility:awaitility")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenSupportVersion")
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
