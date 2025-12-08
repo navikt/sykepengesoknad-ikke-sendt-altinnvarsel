@@ -16,7 +16,7 @@ import javax.xml.namespace.QName
 
 @Component
 class AltinnVarselMapper(
-    @Value("\${overstyr.orgnr:nei}") private val overstyrOrgnr: String,
+    @param:Value("\${overstyr.orgnr:nei}") private val overstyrOrgnr: String,
 ) {
     val log = logger()
 
