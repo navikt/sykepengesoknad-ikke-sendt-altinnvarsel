@@ -37,7 +37,7 @@ val commonsTextVersion = "1.15.0"
 val jakartaActivationVersion = "2.0.1"
 val cxfVersion = "3.5.8"
 val bindApiVersion = "4.0.5"
-val jaxbRuntimeVersion = "2.4.0-b180830.0438"
+val jaxbRuntimeVersion = "4.0.7"
 val jwsApiVersion = "2.1.0"
 val jaxWsApiVersion = "2.3.1"
 
