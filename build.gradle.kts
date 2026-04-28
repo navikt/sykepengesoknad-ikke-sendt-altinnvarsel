@@ -38,7 +38,7 @@ val jakartaActivationVersion = "2.0.1"
 val cxfVersion = "3.5.8"
 val bindApiVersion = "4.0.5"
 val jaxbRuntimeVersion = "2.4.0-b180830.0438"
-val jwsApiVersion = "2.1.0"
+val jwsApiVersion = "3.0.0"
 val jaxWsApiVersion = "2.3.1"
 
 dependencies {
