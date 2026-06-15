@@ -8,6 +8,9 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.scheduling.annotation.EnableScheduling
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 @SpringBootApplication
 @EnableScheduling
@@ -26,3 +29,5 @@ val objectMapper: ObjectMapper =
     }
 
 fun Any.serialisertTilString(): String = objectMapper.writeValueAsString(this)
+
+fun Instant.tilOsloLocalDateTime(): LocalDateTime = this.atZone(ZoneId.of("Europe/Oslo")).toLocalDateTime()
