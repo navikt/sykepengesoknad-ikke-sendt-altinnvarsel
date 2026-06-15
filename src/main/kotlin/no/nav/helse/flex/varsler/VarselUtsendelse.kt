@@ -8,7 +8,9 @@ import no.nav.helse.flex.client.pdl.PdlClient
 import no.nav.helse.flex.logger
 import no.nav.helse.flex.narmesteleder.NarmesteLederRepository
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus
-import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus.*
+import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus.INGEN_FORSKUTTERING
+import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus.PLANLAGT
+import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus.SENDT
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselType
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
