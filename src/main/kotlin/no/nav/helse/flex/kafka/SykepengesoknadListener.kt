@@ -32,6 +32,7 @@ class SykepengesoknadListener(
         val norskTidspunkt = Instant.now().tilOsloLocalDateTime()
         if (norskTidspunkt.isAfter(LocalDateTime.of(2026, 6, 15, 12, 0))) {
             log.info("Konsumerer ikke søknad: ${sykepengesoknadDTO.id} til Altinn siden klokken er: $norskTidspunkt")
+            acknowledgment.acknowledge()
             return
         }
 
