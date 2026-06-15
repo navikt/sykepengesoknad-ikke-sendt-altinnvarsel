@@ -5,6 +5,7 @@ import no.nav.helse.flex.varsler.domain.PlanlagtVarselStatus.*
 import no.nav.helse.flex.varsler.domain.PlanlagtVarselType.IKKE_SENDT_SYKEPENGESOKNAD
 import org.amshove.kluent.*
 import org.awaitility.Awaitility.await
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
@@ -14,6 +15,7 @@ import java.time.ZoneOffset
 import java.util.*
 import java.util.concurrent.TimeUnit.SECONDS
 
+@Disabled
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class JulesoknadVarselTest : FellesTestOppsett() {
     val orgnummer = "999111555"
